@@ -5,7 +5,7 @@ This project is a custom-built app to track grocery lists and other shopping usi
 ## Table of contents
 
 - [Overview](#overview)
-  - [The challenge](#the-challenge)
+  - [The goals](#the-goals)
   - [Screenshot](#screenshot)
 - [My process](#my-process)
   - [Built with](#built-with)
