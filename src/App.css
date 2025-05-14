@@ -1,0 +1,86 @@
+@import url('https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200..1000;1,200..1000&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap');
+@import url('https://fonts.googleapis.com/icon?family=Material+Icons');
+
+body {
+  display: flex;
+  align-items: start;
+  background-color: #d0e5d9;
+  color: #08321a;
+  --bs-body-font-family: 'Nuntio', sans-serif;
+  font-family: 'Nuntio', sans-serif;
+}
+
+#root {
+  max-width: 1280px;
+  margin: 0 auto;
+}
+
+header {
+  text-align: center;
+  display: flex;
+}
+header img {
+  margin-left: 20px;
+}
+
+.list,
+.category {
+  margin: 0;
+  cursor: pointer;
+}
+
+.listSelector {
+  margin: 10px 0 0 0;
+}
+
+.list span {
+  text-decoration: underline;
+}
+
+h4 {
+  margin: 0;
+}
+.listSelector,
+.categorySelector {
+  margin: 0;
+  display: flex;
+  align-items: center;
+}
+.item {
+  margin: 0;
+  margin-left: 20px;
+  display: flex;
+  align-items: center;
+}
+
+Button {
+  min-width: 36px !important;
+  width: 36px;
+  margin-left: 5px !important;
+}
+
+div.listSelector input {
+  font-size: 24px;
+  font-weight: 700;
+  field-sizing: content;
+  min-width: 50px;
+}
+div.categorySelector input {
+  font-size: 18.72px;
+  font-weight: 700;
+  field-sizing: content;
+  min-width: 50px;
+}
+div.categorySelector input {
+  font-size: 18.72px;
+  font-weight: 700;
+  field-sizing: content;
+  min-width: 50px;
+}
+div.item input {
+  font-size: 15px;
+  font-weight: 700;
+  field-sizing: content;
+  min-width: 50px;
+}
