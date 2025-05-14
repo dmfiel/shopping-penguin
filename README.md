@@ -50,7 +50,7 @@ Coming soon:
 
 ### What I learned
 
-One of the challenges with this project was working with dates. Between the input and output formats and the functions needed for conversion and comparison, it can get confusing. Also, getting the grid setup for the task lisk took a while to tweak the CSS.
+It has been great to reinforce my React experience and build a responsive, useful application. The biggest challenge has been deciding the best way to share state between components and maintain the data structure.
 
 ### Useful resources
 
