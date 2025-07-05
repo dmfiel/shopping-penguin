@@ -6,7 +6,7 @@ body {
   font-family: 'Nuntio', sans-serif;
 }
 
-Button {
+.MuiButton-root {
   min-width: 36px !important;
   width: 36px;
   margin-left: 5px !important;
@@ -23,20 +23,20 @@ Button {
   opacity: 10%;
 }
 
-button:hover,
-button:focus,
-button:focus-visible {
+.MuiButton-root:hover,
+.MuiButton-root:focus,
+.MuiButton-root:focus-visible {
   border-color: #646cff;
   opacity: 100%;
 }
 
-input:focus + button,
-div.listSelector:focus > button,
-div.listSelector:hover > button,
-div.categorySelector:focus > button,
-div.categorySelector:hover > button,
-div.item:focus > button,
-div.item:hover > button {
+input:focus + .MuiButton-root,
+div.listSelector:focus > .MuiButton-root,
+div.listSelector:hover > .MuiButton-root,
+div.categorySelector:focus > .MuiButton-root,
+div.categorySelector:hover > .MuiButton-root,
+div.item:focus > .MuiButton-root,
+div.item:hover > .MuiButton-root {
   display: flex !important;
   opacity: 100%;
 }
