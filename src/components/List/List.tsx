@@ -41,7 +41,7 @@ export function Lists({ token }: ListsProps) {
 
       // pull lists from Mongo
       const response = await axios.get(SHOPPING_SERVER + '/api/lists', {
-        headers: { 'x-access-token': token }
+        headers: { Authorization: token }
       });
 
       setStatus(response.status);
