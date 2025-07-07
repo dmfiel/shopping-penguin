@@ -1,8 +1,12 @@
 // import axios from 'axios';
 import './App.css';
 import { useEffect, useState, useReducer, useContext } from 'react';
-import { Navigate, Route, Routes, useNavigate } from 'react-router-dom';
+import { Route, Routes, useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import { v4 as uuidv4 } from 'uuid';
+import { Button, Tooltip } from '@mui/material';
+import { AddCircleRounded } from '@mui/icons-material';
+
 import type { ListType } from './types';
 import { Lists } from './components/List/List';
 import { Login } from './pages/Login';
@@ -11,23 +15,29 @@ import { ThemeButton, ThemeContext } from './context/ThemeContext';
 import { ErrorContext } from './context/ErrorContext';
 import { ErrorMessage } from './components/ErrorMessage/ErrorMessage';
 import { Register } from './pages/Register';
-const SHOPPING_SERVER = 'http://localhost:8080';
+import { ListsContext } from './context/ListContext';
+export const SHOPPING_SERVER = 'http://localhost:8080';
 
 export default function App() {
   const { theme } = useContext(ThemeContext);
   const { showError } = useContext(ErrorContext);
   const navigate = useNavigate();
+  const { lists, setLists } = useContext(ListsContext);
 
   const [user, setUser] = useState(null);
-  const [token, setToken] = useState(() => {
-    const savedToken = localStorage.getItem('token');
-    return savedToken ? savedToken : null;
-  });
-  const [lists, setLists] = useState<ListType[]>([]);
+  const [token, setToken] = useState(pullLocalToken());
+
   const forceUpdate = useReducer(() => ({}), 0)[1];
+
   useEffect(() => {
-    fetchLists();
-  }, []);
+    if (!token) pullLocalToken();
+  });
+
+  function pullLocalToken(): string | null {
+    const savedToken = localStorage.getItem('accessToken');
+    console.log('local token: ', savedToken);
+    return savedToken ? savedToken : null;
+  }
 
   const handleRegister = async (
     username: string,
@@ -68,28 +78,14 @@ export default function App() {
     }
   };
 
-  const fetchLists = () => {
-    // console.log('fetching lists');
-    try {
-      let listJSON = localStorage.getItem('shoppingLists');
-      console.log(listJSON);
-      if (!listJSON || listJSON === '[]')
-        listJSON =
-          '[{"list":"Grocery Store","id":"0","shown":"true","categories":[{"id":"1","category":"Produce","items":[{"id":"2","item":"Apples"},{"id":"3","item":"Potatoes"}]}]}]';
-
-      setLists(JSON.parse(listJSON));
-      console.log(JSON.parse(listJSON));
-    } catch (error) {
-      showError('Error fetching lists:' + error);
-      console.error('Error fetching lists:', error);
-    }
-  };
-
-  const saveLists = () => {
-    console.log('savelists lists: ', lists);
-    localStorage.setItem('shoppingLists', JSON.stringify(lists));
-    forceUpdate();
-  };
+  function createList() {
+    const listJSON = `{"list":"New List","id":"${uuidv4()}","shown":"true","categories":[]}`;
+    const newList: ListType = JSON.parse(listJSON);
+    const newLists = new Array<ListType>(...lists);
+    newLists.push(newList);
+    console.log('creating list: ', lists);
+    setLists(newLists);
+  }
 
   return (
     <div
@@ -105,18 +101,20 @@ export default function App() {
             className="md:ml-5 w-16 md:w-20 lg:w-24"
           />
           <h1 className="text-3xl md:text-4xl lg:text-5xl">Shopping Penguin</h1>
+          <Tooltip title="Create New List">
+            <Button onClick={() => createList()} aria-label="Create new list">
+              <AddCircleRounded />
+            </Button>
+          </Tooltip>
         </div>
         <div className="h-10">
-          <ThemeButton />
+          <ThemeButton size={1} />
         </div>
       </header>
       <ErrorMessage />
       <div id="primary" className="flex-1 mx-auto max-w-[1280px]">
         <Routes>
-          <Route
-            path="/"
-            element={lists && <Lists lists={lists} saveLists={saveLists} />}
-          />
+          <Route path="/" element={<Lists token={token} />} />
           <Route path="/login" element={<Login onLogin={handleLogin} />} />
           <Route
             path="/register"

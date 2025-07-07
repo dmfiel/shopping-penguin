@@ -5,13 +5,16 @@ import './index.css';
 import App from './App.tsx';
 import ErrorProvider from './context/ErrorContext.tsx';
 import ThemeProvider from './context/ThemeContext.tsx';
+import ListsProvider from './context/ListContext.tsx';
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <BrowserRouter>
       <ErrorProvider>
         <ThemeProvider>
-          <App />
+          <ListsProvider>
+            <App />
+          </ListsProvider>
         </ThemeProvider>
       </ErrorProvider>
     </BrowserRouter>

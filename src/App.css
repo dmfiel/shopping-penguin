@@ -6,6 +6,10 @@ body {
   font-family: 'Nuntio', sans-serif;
 }
 
+.dark .MuiCheckbox-root {
+  color: #999999 !important;
+}
+
 .MuiButton-root {
   min-width: 36px !important;
   width: 36px;

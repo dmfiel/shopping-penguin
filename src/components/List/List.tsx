@@ -1,7 +1,8 @@
-import { useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import axios, { AxiosError } from 'axios';
+import { v4 as uuidv4 } from 'uuid';
 import { Checkbox, Button } from '@mui/material';
-import { Category, CreateCategory } from './Category';
-import type { ListProps, ListsProps } from '../../types';
 import {
   ExpandLess,
   ExpandMore,
@@ -11,10 +12,128 @@ import {
   DeleteForever
 } from '@mui/icons-material';
 
-export function Lists({ lists, saveLists }: ListsProps) {
+import { Category, CreateCategory } from './Category';
+import type { ListProps, ListsProps, ListType } from '../../types';
+import { SHOPPING_SERVER } from '../../App';
+import { ErrorContext } from '../../context/ErrorContext';
+import { ListsContext } from '../../context/ListContext';
+
+export function Lists({ token }: ListsProps) {
+  const { lists, setLists } = useContext(ListsContext);
+  const navigate = useNavigate();
+  const { showError } = useContext(ErrorContext);
+  const [status, setStatus] = useState<number | undefined>(0);
+
   console.log('in Lists', lists.length, lists);
+
+  useEffect(() => {
+    if (!lists || lists.length === 0) fetchLists();
+  }, []);
+
+  async function fetchLists() {
+    // console.log('fetching lists');
+    try {
+      if (!token) {
+        console.log('no token found, going to login');
+        navigate('/login');
+        return;
+      }
+
+      // pull lists from Mongo
+      const response = await axios.get(SHOPPING_SERVER + '/api/lists', {
+        headers: { 'x-access-token': token }
+      });
+
+      setStatus(response.status);
+      console.log('/lists response: ', response);
+      // setToken(response.data.accessToken);
+      // localStorage.setItem('accessToken', response.data.accessToken);
+      setLists(response.data);
+      showError('Successfully read lists from database.', true);
+    } catch (error) {
+      const newStatus = (error as AxiosError).status;
+      setStatus(newStatus);
+      switch (newStatus) {
+        case 404:
+          showError('No list found for user.');
+          setLists([]);
+          break;
+        case 401:
+          showError('Expired token, please login.');
+          navigate('/login');
+          break;
+        case 403:
+          showError('No token provided, please login.');
+          navigate('/login');
+          break;
+      }
+      console.error('Error fetching lists:', error);
+    }
+  }
+
+  function getLocalLists() {
+    let listJSON = localStorage.getItem('shoppingLists');
+    console.log(listJSON);
+    if (listJSON) {
+      setLists(JSON.parse(listJSON));
+      console.log(JSON.parse(listJSON));
+      showError('Loaded lists from local storage.', true);
+    } else {
+      showError('No lists found in local storage.');
+    }
+  }
+
+  useEffect(() => {
+    if (status === 404) getLocalLists();
+  }, [status]);
+
+  function createList() {
+    const listJSON = `{"list":"New List","id":"${uuidv4()}","shown":"true","categories":[]}`;
+    const newList: ListType = JSON.parse(listJSON);
+    const newLists = new Array<ListType>(...lists);
+    newLists.push(newList);
+    console.log('creating list: ', lists);
+    setLists(newLists);
+  }
+
+  function sampleData() {
+    const listJSON =
+      '[{"list":"Grocery Store","id":"0","shown":"true","categories":[{"id":"1","category":"Produce","items":[{"id":"2","item":"Apples"},{"id":"3","item":"Potatoes"}]}]}]';
+    setLists(JSON.parse(listJSON));
+  }
+
+  function saveLists() {
+    console.log('savelists lists: ', lists);
+    localStorage.setItem('shoppingLists', JSON.stringify(lists));
+    // forceUpdate();
+  }
+
   return (
     <div className="mx-auto">
+      {!lists ||
+        (lists.length === 0 && (
+          <div className="flex flex-col gap-3">
+            <h1 className="text-center">
+              You don't have any lists.
+              <br />
+              How would you like to proceed?
+            </h1>
+            <button
+              type="button"
+              className="bg-blue-300 hover:bg-blue-400 focus:bg-blue-400 dark:bg-blue-700 dark:hover:bg-blue-600 dark:focus:bg-blue-600 px-3 rounded-md"
+              onClick={() => createList()}
+            >
+              Create a new list
+            </button>
+            <button
+              type="button"
+              className="bg-blue-300 hover:bg-blue-400 focus:bg-blue-400 dark:bg-blue-700 dark:hover:bg-blue-600 dark:focus:bg-blue-600 px-3 rounded-md"
+              onClick={() => sampleData()}
+            >
+              Load some sample data
+            </button>
+          </div>
+        ))}
       {lists &&
         lists.length > 0 &&
         lists.map(list => (

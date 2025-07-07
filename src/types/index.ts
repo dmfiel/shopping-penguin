@@ -24,8 +24,7 @@ export type ItemType = {
 };
 
 export interface ListsProps {
-  lists: ListType[];
-  saveLists: () => void;
+  token: string | null;
 }
 
 export interface ListProps {

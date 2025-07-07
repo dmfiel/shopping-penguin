@@ -1,8 +1,8 @@
-import { useContext, useState } from 'react';
+import { useContext } from 'react';
 import { ErrorContext } from '../../context/ErrorContext';
 
 export function ErrorMessage() {
-  const { errorMessage, showError, isSuccess } = useContext(ErrorContext);
+  const { errorMessage, isSuccess } = useContext(ErrorContext);
 
   if (!errorMessage) return;
 
