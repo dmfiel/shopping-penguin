@@ -2,7 +2,7 @@ import { useContext, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios, { AxiosError } from 'axios';
 import { v4 as uuidv4 } from 'uuid';
-import { Checkbox, Button } from '@mui/material';
+import { Checkbox, Button, Tooltip } from '@mui/material';
 import {
   ExpandLess,
   ExpandMore,
@@ -103,10 +103,13 @@ export function Lists({ token }: ListsProps) {
   }
 
   function saveLists() {
+    if (!lists || lists.length === 0) return;
     console.log('savelists lists: ', lists);
     localStorage.setItem('shoppingLists', JSON.stringify(lists));
     // forceUpdate();
   }
+
+  useEffect(() => saveLists(), [lists]);
 
   return (
     <div className="mx-auto">
@@ -186,22 +189,28 @@ export function List({ list, saveLists }: ListProps) {
   return (
     <div className="listContainer">
       <div className="listSelector mt-2.5 text-2xl font-medium flex items-center cursor-pointer">
-        <Checkbox
-          checked={checked}
-          onChange={onChangeHandler}
-          icon={<ExpandLess />}
-          checkedIcon={<ExpandMore />}
-          // label={list.list}
-        />
+        <Tooltip title={checked ? 'Hide List' : 'Show List'} disableInteractive>
+          <Checkbox
+            checked={checked}
+            onChange={onChangeHandler}
+            icon={<ExpandLess />}
+            checkedIcon={<ExpandMore />}
+            // label={list.list}
+          />
+        </Tooltip>
         {!edit && (
           <h2 className="list" onClick={onChangeHandler}>
             <span>{input}</span>
-            {!checked &&
-              ' (' +
-                list.categories
-                  .map(cat => (cat.items ? cat.items.length : 0))
-                  .reduce((total, cat) => total + cat) +
-                ')'}
+            <Tooltip title="Count of hidden items" disableInteractive>
+              <span>
+                {!checked &&
+                  ' (' +
+                    list.categories
+                      .map(cat => (cat.items ? cat.items.length : 0))
+                      .reduce((total, cat) => total + cat) +
+                    ')'}
+              </span>
+            </Tooltip>
           </h2>
         )}
         {edit && (
@@ -225,21 +234,27 @@ export function List({ list, saveLists }: ListProps) {
           </div>
         )}
         {!edit && (
-          <Button
-            onClick={() => {
-              setInputSave(input);
-              setEdit(true);
-            }}
-          >
-            <EditRounded />
-          </Button>
+          <Tooltip title="Edit List" disableInteractive>
+            <Button
+              onClick={() => {
+                setInputSave(input);
+                setEdit(true);
+              }}
+            >
+              <EditRounded />
+            </Button>
+          </Tooltip>
         )}
-        <Button disabled={create} onClick={() => setCreate(true)}>
-          <AddCircleRounded />
-        </Button>
-        <Button onClick={deleteList}>
-          <DeleteForever />
-        </Button>
+        <Tooltip title="Add Category" disableInteractive>
+          <Button disabled={create} onClick={() => setCreate(true)}>
+            <AddCircleRounded />
+          </Button>
+        </Tooltip>
+        <Tooltip title="Delete List" disableInteractive>
+          <Button onClick={deleteList}>
+            <DeleteForever />
+          </Button>
+        </Tooltip>
       </div>
       {create && (
         <CreateCategory

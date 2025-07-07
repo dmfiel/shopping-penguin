@@ -101,7 +101,7 @@ export default function App() {
             className="md:ml-5 w-16 md:w-20 lg:w-24"
           />
           <h1 className="text-3xl md:text-4xl lg:text-5xl">Shopping Penguin</h1>
-          <Tooltip title="Create New List">
+          <Tooltip title="Create New List" disableInteractive>
             <Button onClick={() => createList()} aria-label="Create new list">
               <AddCircleRounded />
             </Button>

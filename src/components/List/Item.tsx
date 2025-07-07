@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Checkbox, Button } from '@mui/material';
+import { Checkbox, Button, Tooltip } from '@mui/material';
 import type { ItemType, ItemProps, CreateItemProps } from '../../types';
 import { EditRounded, Save, DeleteForever } from '@mui/icons-material';
 import { v4 as uuidv4 } from 'uuid';
@@ -46,13 +46,15 @@ export function CreateItem({ cat, saveLists, setCreate }: CreateItemProps) {
         onKeyDown={e => inputKey(e)}
         className="field-sizing-content min-w-12"
       />
-      <Button
-        onClick={() => {
-          saveEndEdit();
-        }}
-      >
-        <Save />
-      </Button>
+      <Tooltip title="Save Item" disableInteractive>
+        <Button
+          onClick={() => {
+            saveEndEdit();
+          }}
+        >
+          <Save />
+        </Button>
+      </Tooltip>
     </div>
   );
 }
@@ -96,7 +98,12 @@ export function Item({ item, saveLists }: ItemProps) {
   return (
     <div className="item ml-5 text-base font-normal flex items-center cursor-pointer">
       {/* label={input} */}
-      <Checkbox checked={checked} onChange={onChangeHandler} />
+      <Tooltip
+        title={checked ? 'Mark as Not Done' : 'Mark as Done'}
+        disableInteractive
+      >
+        <Checkbox checked={checked} onChange={onChangeHandler} />
+      </Tooltip>
       {!edit && <h4 onClick={onChangeHandler}>{input}</h4>}
       {edit && (
         <div className="flex">
@@ -109,28 +116,34 @@ export function Item({ item, saveLists }: ItemProps) {
             onKeyDown={e => inputKey(e)}
             className="field-sizing-content min-w-12"
           />
-          <Button
-            onClick={() => {
-              saveEndEdit();
-            }}
-          >
-            <Save />
-          </Button>
+          <Tooltip title="Save Item" disableInteractive>
+            <Button
+              onClick={() => {
+                saveEndEdit();
+              }}
+            >
+              <Save />
+            </Button>
+          </Tooltip>
         </div>
       )}
       {!edit && (
-        <Button
-          onClick={() => {
-            setInputSave(input);
-            setEdit(true);
-          }}
-        >
-          <EditRounded />
-        </Button>
+        <Tooltip title="Edit Item" disableInteractive>
+          <Button
+            onClick={() => {
+              setInputSave(input);
+              setEdit(true);
+            }}
+          >
+            <EditRounded />
+          </Button>
+        </Tooltip>
       )}{' '}
-      <Button onClick={deleteItem}>
-        <DeleteForever />
-      </Button>
+      <Tooltip title="Delete Item" disableInteractive>
+        <Button onClick={deleteItem}>
+          <DeleteForever />
+        </Button>
+      </Tooltip>
     </div>
   );
 }

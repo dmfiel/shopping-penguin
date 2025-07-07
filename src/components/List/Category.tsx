@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Checkbox, Button } from '@mui/material';
+import { Checkbox, Button, Tooltip } from '@mui/material';
 import { Item, CreateItem } from './Item';
 import type {
   CategoryType,
@@ -70,13 +70,15 @@ export function CreateCategory({
         onKeyDown={e => inputKey(e)}
         className="field-sizing-content min-w-12"
       />
-      <Button
-        onClick={() => {
-          saveEndEdit();
-        }}
-      >
-        <Save />
-      </Button>
+      <Tooltip title="Save Category" disableInteractive>
+        <Button
+          onClick={() => {
+            saveEndEdit();
+          }}
+        >
+          <Save />
+        </Button>
+      </Tooltip>
     </div>
   );
 }
@@ -121,17 +123,24 @@ export function Category({ cat, list, saveLists }: CategoryProps) {
   return (
     <div className="categoryContainer">
       <div className="categorySelector text-lg font-medium flex items-center cursor-pointer">
-        <Checkbox
-          checked={checked}
-          onChange={onChangeHandler}
-          icon={<ExpandLess />}
-          checkedIcon={<ExpandMore />}
-          // label={cat.category}
-        />
+        <Tooltip
+          title={checked ? 'Hide Category' : 'Show Category'}
+          disableInteractive
+        >
+          <Checkbox
+            checked={checked}
+            onChange={onChangeHandler}
+            icon={<ExpandLess />}
+            checkedIcon={<ExpandMore />}
+            // label={cat.category}
+          />
+        </Tooltip>
         {!edit && (
           <h3 className="category" onClick={onChangeHandler}>
             {input}
-            {!checked && ' (' + cat.items.length + ')'}
+            <Tooltip title="Count of hidden items" disableInteractive>
+              <span>{!checked && ' (' + cat.items.length + ')'}</span>
+            </Tooltip>
           </h3>
         )}
         {edit && (
@@ -146,31 +155,39 @@ export function Category({ cat, list, saveLists }: CategoryProps) {
               className="field-sizing-content min-w-12"
             />
 
-            <Button
-              onClick={() => {
-                saveEndEdit();
-              }}
-            >
-              <Save />
-            </Button>
+            <Tooltip title="Save Category" disableInteractive>
+              <Button
+                onClick={() => {
+                  saveEndEdit();
+                }}
+              >
+                <Save />
+              </Button>
+            </Tooltip>
           </div>
         )}
         {!edit && (
-          <Button
-            onClick={() => {
-              setInputSave(input);
-              setEdit(true);
-            }}
-          >
-            <EditRounded />
-          </Button>
+          <Tooltip title="Edit Category" disableInteractive>
+            <Button
+              onClick={() => {
+                setInputSave(input);
+                setEdit(true);
+              }}
+            >
+              <EditRounded />
+            </Button>
+          </Tooltip>
         )}
-        <Button disabled={create} onClick={() => setCreate(true)}>
-          <AddCircleRounded />
-        </Button>
-        <Button onClick={deleteCategory}>
-          <DeleteForever />
-        </Button>
+        <Tooltip title="Add Item" disableInteractive>
+          <Button disabled={create} onClick={() => setCreate(true)}>
+            <AddCircleRounded />
+          </Button>
+        </Tooltip>
+        <Tooltip title="Delete Category" disableInteractive>
+          <Button onClick={deleteCategory}>
+            <DeleteForever />
+          </Button>
+        </Tooltip>
       </div>
       {create && (
         <CreateItem cat={cat} saveLists={saveLists} setCreate={setCreate} />
