@@ -46,7 +46,7 @@ export function CreateItem({ cat, saveLists, setCreate }: CreateItemProps) {
         onKeyDown={e => inputKey(e)}
         className="field-sizing-content min-w-12"
       />
-      <Tooltip title="Save Item" disableInteractive>
+      <Tooltip title="Save Item" disableInteractive arrow>
         <Button
           onClick={() => {
             saveEndEdit();
@@ -101,6 +101,7 @@ export function Item({ item, saveLists }: ItemProps) {
       <Tooltip
         title={checked ? 'Mark as Not Done' : 'Mark as Done'}
         disableInteractive
+        arrow
       >
         <Checkbox checked={checked} onChange={onChangeHandler} />
       </Tooltip>
@@ -116,7 +117,7 @@ export function Item({ item, saveLists }: ItemProps) {
             onKeyDown={e => inputKey(e)}
             className="field-sizing-content min-w-12"
           />
-          <Tooltip title="Save Item" disableInteractive>
+          <Tooltip title="Save Item" disableInteractive arrow>
             <Button
               onClick={() => {
                 saveEndEdit();
@@ -128,7 +129,7 @@ export function Item({ item, saveLists }: ItemProps) {
         </div>
       )}
       {!edit && (
-        <Tooltip title="Edit Item" disableInteractive>
+        <Tooltip title="Edit Item" disableInteractive arrow>
           <Button
             onClick={() => {
               setInputSave(input);
@@ -139,7 +140,7 @@ export function Item({ item, saveLists }: ItemProps) {
           </Button>
         </Tooltip>
       )}{' '}
-      <Tooltip title="Delete Item" disableInteractive>
+      <Tooltip title="Delete Item" disableInteractive arrow>
         <Button onClick={deleteItem}>
           <DeleteForever />
         </Button>

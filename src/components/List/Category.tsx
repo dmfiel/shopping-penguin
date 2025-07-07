@@ -70,7 +70,7 @@ export function CreateCategory({
         onKeyDown={e => inputKey(e)}
         className="field-sizing-content min-w-12"
       />
-      <Tooltip title="Save Category" disableInteractive>
+      <Tooltip title="Save Category" disableInteractive arrow>
         <Button
           onClick={() => {
             saveEndEdit();
@@ -126,6 +126,7 @@ export function Category({ cat, list, saveLists }: CategoryProps) {
         <Tooltip
           title={checked ? 'Hide Category' : 'Show Category'}
           disableInteractive
+          arrow
         >
           <Checkbox
             checked={checked}
@@ -138,7 +139,7 @@ export function Category({ cat, list, saveLists }: CategoryProps) {
         {!edit && (
           <h3 className="category" onClick={onChangeHandler}>
             {input}
-            <Tooltip title="Count of hidden items" disableInteractive>
+            <Tooltip title="Count of hidden items" disableInteractive arrow>
               <span>{!checked && ' (' + cat.items.length + ')'}</span>
             </Tooltip>
           </h3>
@@ -155,7 +156,7 @@ export function Category({ cat, list, saveLists }: CategoryProps) {
               className="field-sizing-content min-w-12"
             />
 
-            <Tooltip title="Save Category" disableInteractive>
+            <Tooltip title="Save Category" disableInteractive arrow>
               <Button
                 onClick={() => {
                   saveEndEdit();
@@ -167,7 +168,7 @@ export function Category({ cat, list, saveLists }: CategoryProps) {
           </div>
         )}
         {!edit && (
-          <Tooltip title="Edit Category" disableInteractive>
+          <Tooltip title="Edit Category" disableInteractive arrow>
             <Button
               onClick={() => {
                 setInputSave(input);
@@ -178,12 +179,12 @@ export function Category({ cat, list, saveLists }: CategoryProps) {
             </Button>
           </Tooltip>
         )}
-        <Tooltip title="Add Item" disableInteractive>
+        <Tooltip title="Add Item" disableInteractive arrow>
           <Button disabled={create} onClick={() => setCreate(true)}>
             <AddCircleRounded />
           </Button>
         </Tooltip>
-        <Tooltip title="Delete Category" disableInteractive>
+        <Tooltip title="Delete Category" disableInteractive arrow>
           <Button onClick={deleteCategory}>
             <DeleteForever />
           </Button>

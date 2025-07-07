@@ -189,7 +189,11 @@ export function List({ list, saveLists }: ListProps) {
   return (
     <div className="listContainer">
       <div className="listSelector mt-2.5 text-2xl font-medium flex items-center cursor-pointer">
-        <Tooltip title={checked ? 'Hide List' : 'Show List'} disableInteractive>
+        <Tooltip
+          title={checked ? 'Hide List' : 'Show List'}
+          disableInteractive
+          arrow
+        >
           <Checkbox
             checked={checked}
             onChange={onChangeHandler}
@@ -201,7 +205,7 @@ export function List({ list, saveLists }: ListProps) {
         {!edit && (
           <h2 className="list" onClick={onChangeHandler}>
             <span>{input}</span>
-            <Tooltip title="Count of hidden items" disableInteractive>
+            <Tooltip title="Count of hidden items" disableInteractive arrow>
               <span>
                 {!checked &&
                   ' (' +
@@ -234,7 +238,7 @@ export function List({ list, saveLists }: ListProps) {
           </div>
         )}
         {!edit && (
-          <Tooltip title="Edit List" disableInteractive>
+          <Tooltip title="Edit List" disableInteractive arrow>
             <Button
               onClick={() => {
                 setInputSave(input);
@@ -245,12 +249,12 @@ export function List({ list, saveLists }: ListProps) {
             </Button>
           </Tooltip>
         )}
-        <Tooltip title="Add Category" disableInteractive>
+        <Tooltip title="Add Category" disableInteractive arrow>
           <Button disabled={create} onClick={() => setCreate(true)}>
             <AddCircleRounded />
           </Button>
         </Tooltip>
-        <Tooltip title="Delete List" disableInteractive>
+        <Tooltip title="Delete List" disableInteractive arrow>
           <Button onClick={deleteList}>
             <DeleteForever />
           </Button>

@@ -1,3 +1,4 @@
+import { Tooltip } from '@mui/material';
 import React, { useContext, useEffect, useState, type ReactNode } from 'react';
 
 export const ThemeContext = React.createContext({
@@ -29,29 +30,33 @@ function ThemeProvider({ children }: { children: ReactNode }) {
 
 export function ThemeButton({ size }: { size?: number }) {
   const { theme, toggleTheme } = useContext(ThemeContext);
-
   return (
-    <button
-      onClick={toggleTheme}
-      className="w-fit whitespace-nowrap
- dark:bg-yellow-400 dark:hover:bg-yellow-500 bg-gray-800 hover:bg-gray-700 py-1 px-2 rounded-md my-2 text-white dark:text-black cursor-pointer"
+    <Tooltip
       title={theme === 'light' ? 'Switch to Dark Mode' : 'Switch to Light Mode'}
-      aria-label={
-        theme === 'light' ? 'Switch to Dark Mode' : 'Switch to Light Mode'
-      }
+      disableInteractive
+      arrow
     >
-      {size === 3
-        ? theme === 'light'
-          ? '🌙 Switch to Dark'
-          : '☀️ Switch to Light'
-        : size === 1
-        ? theme === 'light'
-          ? '🌙'
-          : '☀️'
-        : theme === 'light'
-        ? '🌙 Dark'
-        : '☀️ Light'}
-    </button>
+      <button
+        onClick={toggleTheme}
+        className="w-fit whitespace-nowrap
+ dark:bg-yellow-400 dark:hover:bg-yellow-500 bg-gray-800 hover:bg-gray-700 py-1 px-2 rounded-md my-2 text-white dark:text-black cursor-pointer"
+        aria-label={
+          theme === 'light' ? 'Switch to Dark Mode' : 'Switch to Light Mode'
+        }
+      >
+        {size === 3
+          ? theme === 'light'
+            ? '🌙 Switch to Dark'
+            : '☀️ Switch to Light'
+          : size === 1
+          ? theme === 'light'
+            ? '🌙'
+            : '☀️'
+          : theme === 'light'
+          ? '🌙 Dark'
+          : '☀️ Light'}
+      </button>
+    </Tooltip>
   );
 }
 
