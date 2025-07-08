@@ -48,9 +48,15 @@ export default function App() {
         password,
         roles
       });
-      localStorage.setItem('username', username);
-      showError('Registration successful.', true);
-      navigate('/login');
+
+      if (response.status === 200) {
+        localStorage.setItem('username', username);
+        showError('Registration successful.', true);
+        navigate('/login');
+      } else {
+        showError('Unable to register with that information.');
+        console.error('Registration failed:', response.status);
+      }
     } catch (error) {
       showError('Unable to register with that information.');
       console.error('Registration failed:', error);
@@ -64,11 +70,17 @@ export default function App() {
         password
       });
       // console.log('response: ', response);
-      setToken(response.data.accessToken);
-      localStorage.setItem('accessToken', response.data.accessToken);
-      localStorage.setItem('username', username);
-      // showError('Login successful.', true);
-      navigate('/');
+
+      if (response.status === 200) {
+        setToken(response.data.accessToken);
+        localStorage.setItem('accessToken', response.data.accessToken);
+        localStorage.setItem('username', username);
+        // showError('Login successful.', true);
+        navigate('/');
+      } else {
+        showError('Unable to login with that information.');
+        console.error('Login failed:', response.status);
+      }
     } catch (error) {
       showError('Unable to login with that information. ');
       console.error('Login failed:', error);
