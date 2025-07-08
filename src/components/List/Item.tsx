@@ -44,6 +44,7 @@ export function CreateItem({ cat, saveLists, setCreate }: CreateItemProps) {
         onChange={e => saveInput(e)}
         onBlur={() => saveEndEdit()}
         onKeyDown={e => inputKey(e)}
+        maxLength={100}
         className="field-sizing-content min-w-12"
       />
       <Tooltip title="Save Item" disableInteractive arrow>
@@ -115,6 +116,7 @@ export function Item({ item, saveLists }: ItemProps) {
             onChange={e => saveInput(e)}
             onBlur={() => saveEndEdit()}
             onKeyDown={e => inputKey(e)}
+            maxLength={100}
             className="field-sizing-content min-w-12"
           />
           <Tooltip title="Save Item" disableInteractive arrow>

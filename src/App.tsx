@@ -23,8 +23,6 @@ export default function App() {
   const { showError } = useContext(ErrorContext);
   const navigate = useNavigate();
   const { lists, setLists } = useContext(ListsContext);
-
-  const [user, setUser] = useState(null);
   const [token, setToken] = useState(pullLocalToken());
 
   useEffect(() => {
@@ -68,12 +66,20 @@ export default function App() {
       // console.log('response: ', response);
       setToken(response.data.accessToken);
       localStorage.setItem('accessToken', response.data.accessToken);
+      localStorage.setItem('username', username);
       // showError('Login successful.', true);
       navigate('/');
     } catch (error) {
       showError('Unable to login with that information. ');
       console.error('Login failed:', error);
     }
+  };
+
+  const handleLogout = () => {
+    localStorage.setItem('accessToken', '');
+    setToken('');
+    setLists([]);
+    navigate('/login');
   };
 
   function createList() {
@@ -91,7 +97,17 @@ export default function App() {
       className={`${theme} w-full h-full    dark:text-gray-200 flex flex-col gap-3 min-h-screen px-5 pt-5 bg-[#d0e5d9] text-[#08321a] dark:bg-[#202422]`}
     >
       <header className="flex justify-between items-center w-full">
-        <div></div>
+        <div>
+          {token && (
+            <button
+              type="button"
+              onClick={() => handleLogout()}
+              className="bg-blue-300 hover:bg-blue-400 focus:bg-blue-400 dark:bg-blue-700 dark:hover:bg-blue-600 dark:focus:bg-blue-600 px-3 rounded-md h-8.5"
+            >
+              Logout
+            </button>
+          )}
+        </div>
         <div className="flex items-center">
           <img
             src="../src/images/penguin.svg"
@@ -99,11 +115,13 @@ export default function App() {
             className="md:ml-5 w-16 md:w-20 lg:w-24"
           />
           <h1 className="text-3xl md:text-4xl lg:text-5xl">Shopping Penguin</h1>
-          <Tooltip title="Create New List" disableInteractive arrow>
-            <Button onClick={() => createList()} aria-label="Create new list">
-              <AddCircleRounded />
-            </Button>
-          </Tooltip>
+          {token && (
+            <Tooltip title="Create New List" disableInteractive arrow>
+              <Button onClick={() => createList()} aria-label="Create new list">
+                <AddCircleRounded />
+              </Button>
+            </Tooltip>
+          )}
         </div>
         <div className="h-10">
           <ThemeButton size={1} />

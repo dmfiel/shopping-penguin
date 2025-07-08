@@ -68,6 +68,7 @@ export function CreateCategory({
         onChange={e => saveInput(e)}
         onBlur={() => saveEndEdit()}
         onKeyDown={e => inputKey(e)}
+        maxLength={100}
         className="field-sizing-content min-w-12"
       />
       <Tooltip title="Save Category" disableInteractive arrow>
@@ -162,6 +163,7 @@ export function Category({ cat, list, saveLists }: CategoryProps) {
               onChange={e => saveInput(e)}
               onBlur={() => saveEndEdit()}
               onKeyDown={e => inputKey(e)}
+              maxLength={100}
               className="field-sizing-content min-w-12"
             />
 

@@ -73,7 +73,7 @@ export function Lists({ token }: ListsProps) {
     }
   }
 
-  async function pushLists(listJSON: string) {
+  async function pushLists() {
     // console.log('Saving lists to DB');
     try {
       if (!token) {
@@ -148,7 +148,7 @@ export function Lists({ token }: ListsProps) {
     // console.log('savelists lists: ', lists);
     const listJSON = JSON.stringify(lists);
     localStorage.setItem('shoppingLists', listJSON);
-    pushLists(listJSON);
+    pushLists();
     forceUpdate();
   }
 
@@ -278,6 +278,7 @@ export function List({ list, saveLists }: ListProps) {
               onChange={e => saveInput(e)}
               onBlur={() => saveEndEdit()}
               onKeyDown={e => inputKey(e)}
+              maxLength={100}
               className="field-sizing-content min-w-12"
             />
             <Button

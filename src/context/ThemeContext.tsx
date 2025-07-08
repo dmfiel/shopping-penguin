@@ -39,7 +39,7 @@ export function ThemeButton({ size }: { size?: number }) {
       <button
         onClick={toggleTheme}
         className="w-fit whitespace-nowrap
- dark:bg-yellow-400 dark:hover:bg-yellow-500 bg-gray-800 hover:bg-gray-700 py-1 px-2 rounded-md my-2 text-white dark:text-black cursor-pointer"
+ dark:bg-yellow-400 dark:hover:bg-yellow-500 bg-gray-800 hover:bg-gray-700 py-1 px-2 rounded-md my-2 text-white dark:text-black cursor-pointer h-8.5"
         aria-label={
           theme === 'light' ? 'Switch to Dark Mode' : 'Switch to Light Mode'
         }
