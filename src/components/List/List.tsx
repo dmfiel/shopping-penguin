@@ -24,7 +24,7 @@ export function Lists({ token }: ListsProps) {
   const { showError } = useContext(ErrorContext);
   const [status, setStatus] = useState<number | undefined>(0);
 
-  console.log('in Lists', lists.length, lists);
+  // console.log('in Lists', lists.length, lists);
 
   useEffect(() => {
     if (!lists || lists.length === 0) fetchLists();
@@ -34,7 +34,7 @@ export function Lists({ token }: ListsProps) {
     // console.log('fetching lists');
     try {
       if (!token) {
-        console.log('no token found, going to login');
+        console.log('No token found, going to login');
         navigate('/login');
         return;
       }
@@ -45,11 +45,9 @@ export function Lists({ token }: ListsProps) {
       });
 
       setStatus(response.status);
-      console.log('/lists response: ', response);
-      // setToken(response.data.accessToken);
-      // localStorage.setItem('accessToken', response.data.accessToken);
+      // console.log('/lists response: ', response);
       setLists(response.data.lists);
-      showError('Successfully read lists from database.', true);
+      // showError('Successfully read lists from database.', true);
     } catch (error) {
       const newStatus = (error as AxiosError).status;
       setStatus(newStatus);
@@ -76,25 +74,23 @@ export function Lists({ token }: ListsProps) {
   }
 
   async function pushLists(listJSON: string) {
-    console.log('Saving lists to DB');
+    // console.log('Saving lists to DB');
     try {
       if (!token) {
-        console.log('no token found, going to login');
+        console.log('No token found, going to login');
         navigate('/login');
         return;
       }
 
-      console.log('saving listJSON:', listJSON);
+      // console.log('saving listJSON:', listJSON);
       // save lists into Mongo
       const response = await axios.post(SHOPPING_SERVER + '/api/lists', lists, {
         headers: { Authorization: token }
       });
 
       setStatus(response.status);
-      console.log('/lists response: ', response);
-      // setToken(response.data.accessToken);
-      // localStorage.setItem('accessToken', response.data.accessToken);
-      showError('Successfully saved lists into database.', true);
+      // console.log('/lists response: ', response);
+      // showError('Successfully saved lists into database.', true);
     } catch (error) {
       const newStatus = (error as AxiosError).status;
       setStatus(newStatus);
@@ -118,11 +114,11 @@ export function Lists({ token }: ListsProps) {
 
   function getLocalLists() {
     let listJSON = localStorage.getItem('shoppingLists');
-    console.log(listJSON);
+    // console.log(listJSON);
     if (listJSON) {
       setLists(JSON.parse(listJSON));
-      console.log(JSON.parse(listJSON));
-      showError('Loaded lists from local storage.', true);
+      // console.log(JSON.parse(listJSON));
+      // showError('Loaded lists from local storage.', true);
     } else {
       showError('No lists found in local storage.');
     }
@@ -137,7 +133,7 @@ export function Lists({ token }: ListsProps) {
     const newList: ListType = JSON.parse(listJSON);
     const newLists = new Array<ListType>(...lists);
     newLists.push(newList);
-    console.log('creating list: ', lists);
+    // console.log('creating list: ', lists);
     setLists(newLists);
   }
 
@@ -149,7 +145,7 @@ export function Lists({ token }: ListsProps) {
 
   function saveLists() {
     if (!lists || lists.length === 0) return;
-    console.log('savelists lists: ', lists);
+    // console.log('savelists lists: ', lists);
     const listJSON = JSON.stringify(lists);
     localStorage.setItem('shoppingLists', listJSON);
     pushLists(listJSON);
@@ -204,7 +200,7 @@ export function List({ list, saveLists }: ListProps) {
 
   if (list.deleted) return;
 
-  console.log('in List', list);
+  // console.log('in List', list);
 
   function onChangeHandler() {
     list.shown = !checked;

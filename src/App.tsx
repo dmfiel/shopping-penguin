@@ -33,7 +33,7 @@ export default function App() {
 
   function pullLocalToken(): string | null {
     const savedToken = localStorage.getItem('accessToken');
-    console.log('local token: ', savedToken);
+    // console.log('local token: ', savedToken);
     return savedToken ? savedToken : null;
   }
 
@@ -65,10 +65,10 @@ export default function App() {
         username,
         password
       });
-      console.log('response: ', response);
+      // console.log('response: ', response);
       setToken(response.data.accessToken);
       localStorage.setItem('accessToken', response.data.accessToken);
-      showError('Login successful.', true);
+      // showError('Login successful.', true);
       navigate('/');
     } catch (error) {
       showError('Unable to login with that information. ');
@@ -81,7 +81,7 @@ export default function App() {
     const newList: ListType = JSON.parse(listJSON);
     const newLists = new Array<ListType>(...lists);
     newLists.push(newList);
-    console.log('creating list: ', lists);
+    // console.log('creating list: ', lists);
     setLists(newLists);
   }
 
