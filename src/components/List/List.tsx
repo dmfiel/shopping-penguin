@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from 'react';
+import { useContext, useEffect, useReducer, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios, { AxiosError } from 'axios';
 import { v4 as uuidv4 } from 'uuid';
@@ -48,7 +48,7 @@ export function Lists({ token }: ListsProps) {
       console.log('/lists response: ', response);
       // setToken(response.data.accessToken);
       // localStorage.setItem('accessToken', response.data.accessToken);
-      setLists(response.data);
+      setLists(response.data.lists);
       showError('Successfully read lists from database.', true);
     } catch (error) {
       const newStatus = (error as AxiosError).status;
@@ -66,8 +66,53 @@ export function Lists({ token }: ListsProps) {
           showError('No token provided, please login.');
           navigate('/login');
           break;
+        case 500:
+        default:
+          showError('Error getting lists from database.');
+          break;
       }
       console.error('Error fetching lists:', error);
+    }
+  }
+
+  async function pushLists(listJSON: string) {
+    console.log('Saving lists to DB');
+    try {
+      if (!token) {
+        console.log('no token found, going to login');
+        navigate('/login');
+        return;
+      }
+
+      console.log('saving listJSON:', listJSON);
+      // save lists into Mongo
+      const response = await axios.post(SHOPPING_SERVER + '/api/lists', lists, {
+        headers: { Authorization: token }
+      });
+
+      setStatus(response.status);
+      console.log('/lists response: ', response);
+      // setToken(response.data.accessToken);
+      // localStorage.setItem('accessToken', response.data.accessToken);
+      showError('Successfully saved lists into database.', true);
+    } catch (error) {
+      const newStatus = (error as AxiosError).status;
+      setStatus(newStatus);
+      switch (newStatus) {
+        case 401:
+          showError('Expired token, please login.');
+          navigate('/login');
+          break;
+        case 403:
+          showError('No token provided, please login.');
+          navigate('/login');
+          break;
+        case 500:
+        default:
+          showError('Error saving lists into database.');
+          break;
+      }
+      console.error('Error saving lists:', error);
     }
   }
 
@@ -105,9 +150,13 @@ export function Lists({ token }: ListsProps) {
   function saveLists() {
     if (!lists || lists.length === 0) return;
     console.log('savelists lists: ', lists);
-    localStorage.setItem('shoppingLists', JSON.stringify(lists));
-    // forceUpdate();
+    const listJSON = JSON.stringify(lists);
+    localStorage.setItem('shoppingLists', listJSON);
+    pushLists(listJSON);
+    forceUpdate();
   }
+
+  const forceUpdate = useReducer(() => ({}), 0)[1];
 
   useEffect(() => saveLists(), [lists]);
 
@@ -153,14 +202,13 @@ export function List({ list, saveLists }: ListProps) {
   const [inputSave, setInputSave] = useState<string>(list.list);
   const [create, setCreate] = useState<boolean>(false);
 
+  if (list.deleted) return;
+
   console.log('in List', list);
 
-  if (list.deleted) return;
-  if (!list.shown) list.shown = true;
-
   function onChangeHandler() {
+    list.shown = !checked;
     setChecked(!checked);
-    list.shown = checked;
     saveLists();
   }
 
@@ -208,9 +256,17 @@ export function List({ list, saveLists }: ListProps) {
             <Tooltip title="Count of hidden items" disableInteractive arrow>
               <span>
                 {!checked &&
+                  list.categories &&
+                  list.categories.length > 0 &&
                   ' (' +
                     list.categories
-                      .map(cat => (cat.items ? cat.items.length : 0))
+                      .map(cat =>
+                        cat.items && cat.items.length > 0
+                          ? cat.items.filter(
+                              item => !item.completed && !item.deleted
+                            ).length
+                          : 0
+                      )
                       .reduce((total, cat) => total + cat) +
                     ')'}
               </span>
@@ -269,6 +325,7 @@ export function List({ list, saveLists }: ListProps) {
       )}
       {checked &&
         list.categories &&
+        list.categories.length > 0 &&
         list.categories.map(cat => (
           <Category cat={cat} list={list} key={cat.id} saveLists={saveLists} />
         ))}

@@ -1,6 +1,6 @@
 // import axios from 'axios';
 import './App.css';
-import { useEffect, useState, useReducer, useContext } from 'react';
+import { useEffect, useState, useContext } from 'react';
 import { Route, Routes, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { v4 as uuidv4 } from 'uuid';
@@ -26,8 +26,6 @@ export default function App() {
 
   const [user, setUser] = useState(null);
   const [token, setToken] = useState(pullLocalToken());
-
-  const forceUpdate = useReducer(() => ({}), 0)[1];
 
   useEffect(() => {
     if (!token) pullLocalToken();

@@ -84,17 +84,17 @@ export function CreateCategory({
 }
 
 export function Category({ cat, list, saveLists }: CategoryProps) {
-  if (cat.deleted) return;
-  if (!cat.shown) cat.shown = true;
   const [checked, setChecked] = useState<boolean>(cat.shown);
   const [edit, setEdit] = useState<boolean>(false);
   const [create, setCreate] = useState<boolean>(false);
   const [input, setInput] = useState<string>(cat.category);
   const [inputSave, setInputSave] = useState<string>(cat.category);
 
+  if (cat.deleted) return;
+
   function onChangeHandler() {
+    cat.shown = !checked;
     setChecked(!checked);
-    list.shown = checked;
     saveLists();
   }
 
@@ -140,7 +140,16 @@ export function Category({ cat, list, saveLists }: CategoryProps) {
           <h3 className="category" onClick={onChangeHandler}>
             {input}
             <Tooltip title="Count of hidden items" disableInteractive arrow>
-              <span>{!checked && ' (' + cat.items.length + ')'}</span>
+              <span>
+                {!checked &&
+                  cat.items &&
+                  cat.items.length > 0 &&
+                  ' (' +
+                    cat.items.filter(
+                      item => item && !item.completed && !item.deleted
+                    ).length +
+                    ')'}
+              </span>
             </Tooltip>
           </h3>
         )}
@@ -195,6 +204,7 @@ export function Category({ cat, list, saveLists }: CategoryProps) {
       )}
       {checked &&
         cat.items &&
+        cat.items.length > 0 &&
         cat.items.map(item => (
           <Item item={item} cat={cat} key={item.id} saveLists={saveLists} />
         ))}

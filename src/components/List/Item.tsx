@@ -69,8 +69,8 @@ export function Item({ item, saveLists }: ItemProps) {
   // console.log('Render Item: ', item);
 
   function onChangeHandler() {
+    item.completed = !checked;
     setChecked(!checked);
-    item.completed = checked;
     saveLists();
   }
 
