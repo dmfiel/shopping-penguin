@@ -4,7 +4,12 @@ import type { ItemType, ItemProps, CreateItemProps } from '../../types';
 import { EditRounded, Save, DeleteForever } from '@mui/icons-material';
 import { v4 as uuidv4 } from 'uuid';
 
-export function CreateItem({ cat, saveLists, setCreate }: CreateItemProps) {
+export function CreateItem({
+  cat,
+  list,
+  saveLists,
+  setCreate
+}: CreateItemProps) {
   const [input, setInput] = useState('');
 
   function saveInput(e: React.ChangeEvent<HTMLInputElement>) {
@@ -27,8 +32,14 @@ export function CreateItem({ cat, saveLists, setCreate }: CreateItemProps) {
     };
     if (input) {
       newItem.item = input;
+      newItem.created = new Date();
+      newItem.modified = new Date();
+      newItem.countCompleted = 0;
+      cat.modified = new Date();
+      list.modified = new Date();
       if (!cat.items) cat.items = [];
       cat.items.push(newItem);
+
       saveLists();
     }
     setCreate(false);
@@ -60,7 +71,7 @@ export function CreateItem({ cat, saveLists, setCreate }: CreateItemProps) {
   );
 }
 
-export function Item({ item, saveLists }: ItemProps) {
+export function Item({ item, cat, list, saveLists }: ItemProps) {
   if (item.deleted) return;
   if (!item.completed) item.completed = false;
   const [checked, setChecked] = useState(item.completed);
@@ -72,6 +83,16 @@ export function Item({ item, saveLists }: ItemProps) {
   function onChangeHandler() {
     item.completed = !checked;
     setChecked(!checked);
+    if (!item.created) item.created = new Date();
+    item.modified = new Date();
+    if (item.completed) {
+      item.countCompleted = (item.countCompleted || 0) + 1;
+      item.lastCompleted = new Date();
+      if (!item.firstCompleted) item.firstCompleted = new Date();
+    }
+    cat.modified = new Date();
+    list.modified = new Date();
+
     saveLists();
   }
 
@@ -90,10 +111,20 @@ export function Item({ item, saveLists }: ItemProps) {
   function saveEndEdit() {
     setEdit(false);
     if (input) item.item = input;
+    if (!item.created) item.created = new Date();
+    item.modified = new Date();
+    cat.modified = new Date();
+    list.modified = new Date();
+
     saveLists();
   }
   function deleteItem() {
     item.deleted = true;
+    if (!item.created) item.created = new Date();
+    item.modified = new Date();
+    cat.modified = new Date();
+    list.modified = new Date();
+
     saveLists();
   }
   return (

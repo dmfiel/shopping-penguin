@@ -131,6 +131,9 @@ export function Lists({ token }: ListsProps) {
   function createList() {
     const listJSON = `{"list":"New List","id":"${uuidv4()}","shown":"true","categories":[]}`;
     const newList: ListType = JSON.parse(listJSON);
+    newList.created = new Date();
+    newList.modified = new Date();
+
     const newLists = new Array<ListType>(...lists);
     newLists.push(newList);
     // console.log('creating list: ', lists);
@@ -140,7 +143,13 @@ export function Lists({ token }: ListsProps) {
   function sampleData() {
     const listJSON =
       '[{"list":"Grocery Store","id":"0","shown":"true","categories":[{"id":"1","category":"Produce","items":[{"id":"2","item":"Apples"},{"id":"3","item":"Potatoes"}]}]}]';
-    setLists(JSON.parse(listJSON));
+    let newLists: ListType[] = JSON.parse(listJSON);
+    newLists = newLists.map(list => {
+      list.created = new Date();
+      list.modified = new Date();
+      return list;
+    });
+    setLists(newLists);
   }
 
   function saveLists() {
@@ -205,12 +214,16 @@ export function List({ list, saveLists }: ListProps) {
   function onChangeHandler() {
     list.shown = !checked;
     setChecked(!checked);
+    if (!list.created) list.created = new Date();
+    list.modified = new Date();
+
     saveLists();
   }
 
   function saveInput(e: React.ChangeEvent<HTMLInputElement>) {
     setInput(e.target.value);
   }
+
   function inputKey(e: React.KeyboardEvent<HTMLInputElement>) {
     if (e.key === 'Enter') {
       saveEndEdit();
@@ -220,13 +233,21 @@ export function List({ list, saveLists }: ListProps) {
       setEdit(false);
     }
   }
+
   function saveEndEdit() {
     setEdit(false);
     if (input) list.list = input;
+    if (!list.created) list.created = new Date();
+    list.modified = new Date();
+
     saveLists();
   }
+
   function deleteList() {
     list.deleted = true;
+    if (!list.created) list.created = new Date();
+    list.modified = new Date();
+
     saveLists();
   }
 

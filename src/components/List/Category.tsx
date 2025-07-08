@@ -46,8 +46,12 @@ export function CreateCategory({
     };
     if (input) {
       newCategory.category = input;
+      newCategory.created = new Date();
+      newCategory.modified = new Date();
       if (!list.categories) list.categories = [];
+      list.modified = new Date();
       list.categories.push(newCategory);
+
       saveLists();
     }
     setCreate(false);
@@ -96,6 +100,10 @@ export function Category({ cat, list, saveLists }: CategoryProps) {
   function onChangeHandler() {
     cat.shown = !checked;
     setChecked(!checked);
+    if (!cat.created) cat.created = new Date();
+    cat.modified = new Date();
+    list.modified = new Date();
+
     saveLists();
   }
 
@@ -113,11 +121,19 @@ export function Category({ cat, list, saveLists }: CategoryProps) {
   }
   function saveEndEdit() {
     setEdit(false);
+    if (!cat.created) cat.created = new Date();
+    cat.modified = new Date();
+    list.modified = new Date();
     if (input) cat.category = input;
+
     saveLists();
   }
   function deleteCategory() {
     cat.deleted = true;
+    if (!cat.created) cat.created = new Date();
+    cat.modified = new Date();
+    list.modified = new Date();
+
     saveLists();
   }
 
@@ -202,13 +218,24 @@ export function Category({ cat, list, saveLists }: CategoryProps) {
         </Tooltip>
       </div>
       {create && (
-        <CreateItem cat={cat} saveLists={saveLists} setCreate={setCreate} />
+        <CreateItem
+          cat={cat}
+          list={list}
+          saveLists={saveLists}
+          setCreate={setCreate}
+        />
       )}
       {checked &&
         cat.items &&
         cat.items.length > 0 &&
         cat.items.map(item => (
-          <Item item={item} cat={cat} key={item.id} saveLists={saveLists} />
+          <Item
+            item={item}
+            cat={cat}
+            list={list}
+            key={item.id}
+            saveLists={saveLists}
+          />
         ))}
     </div>
   );

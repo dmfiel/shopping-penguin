@@ -5,6 +5,8 @@ export type ListType = {
   deleted: boolean;
   shown: boolean;
   checked: boolean;
+  created?: Date;
+  modified?: Date;
 };
 
 export type CategoryType = {
@@ -14,6 +16,8 @@ export type CategoryType = {
   deleted: boolean;
   shown: boolean;
   checked: boolean;
+  created?: Date;
+  modified?: Date;
 };
 
 export type ItemType = {
@@ -21,6 +25,11 @@ export type ItemType = {
   item: string;
   completed: boolean;
   deleted: boolean;
+  created?: Date;
+  modified?: Date;
+  firstCompleted?: Date;
+  lastCompleted?: Date;
+  countCompleted?: number;
 };
 
 export interface ListsProps {
@@ -47,6 +56,7 @@ export interface CategoryProps {
 
 export interface CreateItemProps {
   cat: CategoryType;
+  list: ListType;
   saveLists: () => void;
   setCreate: (create: boolean) => void;
 }
@@ -54,5 +64,6 @@ export interface CreateItemProps {
 export interface ItemProps {
   item: ItemType;
   cat: CategoryType;
+  list: ListType;
   saveLists: () => void;
 }
