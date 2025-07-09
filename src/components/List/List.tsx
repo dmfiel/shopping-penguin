@@ -17,6 +17,7 @@ import type { ListProps, ListsProps, ListType } from '../../types';
 import { SHOPPING_SERVER } from '../../App';
 import { ErrorContext } from '../../context/ErrorContext';
 import { ListsContext } from '../../context/ListContext';
+import { responseOK } from '../services/responseOK';
 
 export function Lists({ token }: ListsProps) {
   const { lists, setLists } = useContext(ListsContext);
@@ -45,8 +46,10 @@ export function Lists({ token }: ListsProps) {
       });
 
       setStatus(response.status);
-      // console.log('/lists response: ', response);
-      setLists(response.data.lists);
+      if (responseOK(response)) {
+        // console.log('/lists response: ', response);
+        setLists(response.data.lists);
+      } else throw new Error();
       // showError('Successfully read lists from database.', true);
     } catch (error) {
       const newStatus = (error as AxiosError).status;
@@ -89,8 +92,11 @@ export function Lists({ token }: ListsProps) {
       });
 
       setStatus(response.status);
-      // console.log('/lists response: ', response);
-      // showError('Successfully saved lists into database.', true);
+      if (responseOK(response)) {
+        // console.log('/lists response: ', response);
+        // showError('Successfully saved lists into database.', true);
+        setLists(response.data.lists);
+      } else throw new Error();
     } catch (error) {
       const newStatus = (error as AxiosError).status;
       setStatus(newStatus);

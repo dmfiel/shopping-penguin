@@ -1,4 +1,3 @@
-// import axios from 'axios';
 import './App.css';
 import { useEffect, useState, useContext } from 'react';
 import { Route, Routes, useNavigate } from 'react-router-dom';
@@ -16,6 +15,7 @@ import { ErrorContext } from './context/ErrorContext';
 import { ErrorMessage } from './components/ErrorMessage/ErrorMessage';
 import { Register } from './pages/Register';
 import { ListsContext } from './context/ListContext';
+import { responseOK } from './components/services/responseOK';
 export const SHOPPING_SERVER = 'http://localhost:8080';
 
 export default function App() {
@@ -49,7 +49,7 @@ export default function App() {
         roles
       });
 
-      if (response.status === 200) {
+      if (responseOK(response)) {
         localStorage.setItem('username', username);
         showError('Registration successful.', true);
         navigate('/login');
@@ -71,7 +71,7 @@ export default function App() {
       });
       // console.log('response: ', response);
 
-      if (response.status === 200) {
+      if (responseOK(response)) {
         setToken(response.data.accessToken);
         localStorage.setItem('accessToken', response.data.accessToken);
         localStorage.setItem('username', username);
