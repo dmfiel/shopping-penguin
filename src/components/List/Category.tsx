@@ -41,8 +41,7 @@ export function CreateCategory({
       category: '',
       items: new Array<ItemType>(),
       deleted: false,
-      shown: true,
-      checked: false
+      shown: true
     };
     if (input) {
       newCategory.category = input;
@@ -95,6 +94,8 @@ export function Category({ cat, list, saveLists }: CategoryProps) {
   const [input, setInput] = useState<string>(cat.category);
   const [inputSave, setInputSave] = useState<string>(cat.category);
 
+  if (cat.deleted === undefined) cat.deleted = false;
+  if (cat.shown === undefined) cat.shown = true;
   if (cat.deleted) return;
 
   function onChangeHandler() {

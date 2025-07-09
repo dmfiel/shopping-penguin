@@ -25,7 +25,7 @@ export function Lists({ token }: ListsProps) {
   const { showError } = useContext(ErrorContext);
   const [status, setStatus] = useState<number | undefined>(0);
 
-  // console.log('in Lists', lists.length, lists);
+  // console.log('in Lists', lists && lists.length, lists);
 
   useEffect(() => {
     if (!lists || lists.length === 0) fetchLists();
@@ -47,7 +47,7 @@ export function Lists({ token }: ListsProps) {
 
       setStatus(response.status);
       if (responseOK(response)) {
-        // console.log('/lists response: ', response);
+        // console.log('/lists response: ', response.data.lists);
         setLists(response.data.lists);
       } else throw new Error();
       // showError('Successfully read lists from database.', true);
@@ -93,9 +93,7 @@ export function Lists({ token }: ListsProps) {
 
       setStatus(response.status);
       if (responseOK(response)) {
-        // console.log('/lists response: ', response);
         // showError('Successfully saved lists into database.', true);
-        setLists(response.data.lists);
       } else throw new Error();
     } catch (error) {
       const newStatus = (error as AxiosError).status;
@@ -119,10 +117,12 @@ export function Lists({ token }: ListsProps) {
   }
 
   function getLocalLists() {
-    let listJSON = localStorage.getItem('shoppingLists');
+    let username = localStorage.getItem('username') || '';
+    let listJSON = localStorage.getItem('shoppingLists:' + username);
     // console.log(listJSON);
     if (listJSON) {
-      setLists(JSON.parse(listJSON));
+      const newLists = JSON.parse(listJSON);
+      if (newLists && newLists.length > 0) setLists(newLists);
       // console.log(JSON.parse(listJSON));
       // showError('Loaded lists from local storage.', true);
     } else {
@@ -162,7 +162,8 @@ export function Lists({ token }: ListsProps) {
     if (!lists || lists.length === 0) return;
     // console.log('savelists lists: ', lists);
     const listJSON = JSON.stringify(lists);
-    localStorage.setItem('shoppingLists', listJSON);
+    let username = localStorage.getItem('username') || '';
+    localStorage.setItem('shoppingLists:' + username, listJSON);
     pushLists();
     forceUpdate();
   }
@@ -212,10 +213,11 @@ export function List({ list, saveLists }: ListProps) {
   const [input, setInput] = useState<string>(list.list);
   const [inputSave, setInputSave] = useState<string>(list.list);
   const [create, setCreate] = useState<boolean>(false);
-
-  if (list.deleted) return;
-
   // console.log('in List', list);
+
+  if (list.deleted === undefined) list.deleted = false;
+  if (list.shown === undefined) list.shown = true;
+  if (list.deleted) return;
 
   function onChangeHandler() {
     list.shown = !checked;

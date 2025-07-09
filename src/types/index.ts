@@ -4,7 +4,6 @@ export type ListType = {
   categories: CategoryType[];
   deleted: boolean;
   shown: boolean;
-  checked: boolean;
   created?: Date;
   modified?: Date;
 };
@@ -15,7 +14,6 @@ export type CategoryType = {
   items: ItemType[];
   deleted: boolean;
   shown: boolean;
-  checked: boolean;
   created?: Date;
   modified?: Date;
 };
