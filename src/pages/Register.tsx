@@ -1,5 +1,6 @@
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useContext, useState } from 'react';
+import { PageContext } from '../context/PageContext';
+// import { useNavigate } from 'react-router-dom';
 
 export function Register({
   onRegister
@@ -10,10 +11,11 @@ export function Register({
     password: string
   ) => Promise<void>;
 }) {
+  const { setPage } = useContext(PageContext);
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -57,7 +59,7 @@ export function Register({
       </form>
       <button
         type="button"
-        onClick={() => navigate('/login')}
+        onClick={() => setPage('Login')}
         className="bg-blue-300 hover:bg-blue-400 focus:bg-blue-400 dark:bg-blue-700 dark:hover:bg-blue-600 dark:focus:bg-blue-600 px-3 rounded-md h-8.5 mt-7"
       >
         Login

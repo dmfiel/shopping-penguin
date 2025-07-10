@@ -1,16 +1,18 @@
-import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useContext, useEffect, useState } from 'react';
+import { PageContext } from '../context/PageContext';
+// import { useNavigate } from 'react-router-dom';
 
 export function Login({
   onLogin
 }: {
   onLogin: (username: string, password: string) => Promise<void>;
 }) {
+  const { setPage } = useContext(PageContext);
   const [username, setUsername] = useState(
     localStorage.getItem('username') || ''
   );
   const [password, setPassword] = useState('');
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
 
   useEffect(() => {
     if (username && username.length > 0)
@@ -52,7 +54,7 @@ export function Login({
       </form>
       <button
         type="button"
-        onClick={() => navigate('/register')}
+        onClick={() => setPage('Register')}
         className="bg-blue-300 hover:bg-blue-400 focus:bg-blue-400 dark:bg-blue-700 dark:hover:bg-blue-600 dark:focus:bg-blue-600 px-3 rounded-md h-8.5 mt-7"
       >
         Register New Account

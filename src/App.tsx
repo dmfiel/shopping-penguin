@@ -1,30 +1,37 @@
 import './App.css';
 import { useEffect, useState, useContext } from 'react';
-import { Route, Routes, useNavigate } from 'react-router-dom';
+// import { Route, Routes, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { v4 as uuidv4 } from 'uuid';
-import { Button, Tooltip } from '@mui/material';
-import { AddCircleRounded } from '@mui/icons-material';
+// import { Button, Tooltip } from '@mui/material';
+import Tooltip from '@mui/material/Tooltip';
+import Button from '@mui/material/Button';
+import AddCircleRounded from '@mui/icons-material/AddCircleRounded';
 
 import type { ListType } from './types';
 import { Lists } from './components/List/List';
 import { Login } from './pages/Login';
-import { NotFoundPage } from './pages/NotFoundPage';
+// import { NotFoundPage } from './pages/NotFoundPage';
 import { ThemeButton, ThemeContext } from './context/ThemeContext';
 import { ErrorContext } from './context/ErrorContext';
 import { ErrorMessage } from './components/ErrorMessage/ErrorMessage';
 import { Register } from './pages/Register';
 import { ListsContext } from './context/ListContext';
 import { responseOK } from './components/services/responseOK';
-export const SHOPPING_SERVER = 'http://localhost:8080';
+import { PageContext } from './context/PageContext';
+import { LoadingSpinner } from './components/LoadingSpinner/LoadingSpinner';
+// export const SHOPPING_SERVER = 'http://localhost:8080';
+export const SHOPPING_SERVER = 'https://shopping-penguin-server.onrender.com';
+export const HOST_DIRECTORY = '/shopping-penguin';
 
 export default function App() {
   const { theme } = useContext(ThemeContext);
   const { showError } = useContext(ErrorContext);
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
   const { lists, setLists } = useContext(ListsContext);
+  const { page, setPage } = useContext(PageContext);
+  const [loading, setLoading] = useState(false);
   const [token, setToken] = useState(pullLocalToken());
-
   useEffect(() => {
     if (!token) pullLocalToken();
   });
@@ -41,6 +48,7 @@ export default function App() {
     password: string
   ) => {
     try {
+      setLoading(true);
       const roles = ['user'];
       const response = await axios.post(SHOPPING_SERVER + '/api/auth/signup', {
         username,
@@ -48,16 +56,18 @@ export default function App() {
         password,
         roles
       });
+      setLoading(false);
 
       if (responseOK(response)) {
         localStorage.setItem('username', username);
         showError('Registration successful.', true);
-        navigate('/login');
+        setPage('Login');
       } else {
         showError('Unable to register with that information.');
         console.error('Registration failed:', response.status);
       }
     } catch (error) {
+      setLoading(false);
       showError('Unable to register with that information.');
       console.error('Registration failed:', error);
     }
@@ -65,23 +75,25 @@ export default function App() {
 
   const handleLogin = async (username: string, password: string) => {
     try {
+      setLoading(true);
       const response = await axios.post(SHOPPING_SERVER + '/api/auth/signin', {
         username,
         password
       });
       // console.log('response: ', response);
-
+      setLoading(false);
       if (responseOK(response)) {
         setToken(response.data.accessToken);
         localStorage.setItem('accessToken', response.data.accessToken);
         localStorage.setItem('username', username);
         // showError('Login successful.', true);
-        navigate('/');
+        setPage('Home');
       } else {
         showError('Unable to login with that information.');
         console.error('Login failed:', response.status);
       }
     } catch (error) {
+      setLoading(false);
       showError('Unable to login with that information. ');
       console.error('Login failed:', error);
     }
@@ -91,7 +103,7 @@ export default function App() {
     localStorage.setItem('accessToken', '');
     setToken('');
     setLists([]);
-    navigate('/login');
+    setPage('Login');
   };
 
   function createList() {
@@ -114,7 +126,7 @@ export default function App() {
             <button
               type="button"
               onClick={() => handleLogout()}
-              className="bg-blue-300 hover:bg-blue-400 focus:bg-blue-400 dark:bg-blue-700 dark:hover:bg-blue-600 dark:focus:bg-blue-600 px-3 rounded-md h-8.5"
+              className="hidden md:flex items-center bg-blue-300 hover:bg-blue-400 focus:bg-blue-400 dark:bg-blue-700 dark:hover:bg-blue-600 dark:focus:bg-blue-600 px-3 rounded-md h-8.5"
             >
               Logout
             </button>
@@ -122,7 +134,7 @@ export default function App() {
         </div>
         <div className="flex items-center">
           <img
-            src="../src/images/penguin.svg"
+            src="./images/penguin.svg"
             alt="Penguin logo."
             className="md:ml-5 w-16 md:w-20 lg:w-24"
           />
@@ -136,32 +148,53 @@ export default function App() {
           )}
         </div>
         <div className="h-10">
-          <ThemeButton size={1} />
+          <div className="hidden md:flex ">
+            <ThemeButton size={1} />
+          </div>
         </div>
       </header>
       <ErrorMessage />
       <div id="primary" className="flex-1 mx-auto max-w-[1280px]">
-        <Routes>
+        {page === 'Home' && <Lists token={token} />}
+        {page === 'Login' && <Login onLogin={handleLogin} />}
+        {page === 'Register' && <Register onRegister={handleRegister} />}
+        {/* <Routes>
           <Route path="/" element={<Lists token={token} />} />
           <Route path="/login" element={<Login onLogin={handleLogin} />} />
           <Route
             path="/register"
             element={<Register onRegister={handleRegister} />}
           />
-          {/* <Route path="/category/:strCategory" element={<Category />} />
-        <Route path="/search/:searchText" element={<Search />} />
-        <Route path="/recipe/:idMeal" element={<Recipe />} /> */}
           <Route path="*" element={<NotFoundPage />} />
-        </Routes>
+        </Routes> */}
       </div>
-      <footer role="contentinfo">
-        <a
-          href="https://www.flaticon.com/free-icons/letter-f"
-          title="letter f icons"
-          className="text-center text-[8pt] text-gray-500"
-        >
-          <p>Letter f icons created by rashedul.islam - Flaticon</p>
-        </a>
+      {loading && <LoadingSpinner text="Connecting, please be patient..." />}
+      <footer role="contentinfo" className="flex justify-between items-end">
+        <div>
+          {token && (
+            <button
+              type="button"
+              onClick={() => handleLogout()}
+              className="flex md:hidden items-center bg-blue-300 hover:bg-blue-400 focus:bg-blue-400 dark:bg-blue-700 dark:hover:bg-blue-600 dark:focus:bg-blue-600 px-3 rounded-md h-8.5"
+            >
+              Logout
+            </button>
+          )}
+        </div>
+        <div>
+          <a
+            href="https://www.flaticon.com/free-icons/letter-f"
+            title="letter f icons"
+            className="text-center text-[8pt] text-gray-500"
+          >
+            <p>Letter f icons created by rashedul.islam - Flaticon</p>
+          </a>
+        </div>
+        <div className="h-10">
+          <div className="flex md:hidden">
+            <ThemeButton size={1} />
+          </div>
+        </div>
       </footer>
     </div>
   );

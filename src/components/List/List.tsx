@@ -1,16 +1,17 @@
 import { useContext, useEffect, useReducer, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+// import { useNavigate } from 'react-router-dom';
 import axios, { AxiosError } from 'axios';
 import { v4 as uuidv4 } from 'uuid';
-import { Checkbox, Button, Tooltip } from '@mui/material';
-import {
-  ExpandLess,
-  ExpandMore,
-  EditRounded,
-  Save,
-  AddCircleRounded,
-  DeleteForever
-} from '@mui/icons-material';
+// import { Checkbox, Button, Tooltip } from '@mui/material';
+import Tooltip from '@mui/material/Tooltip';
+import Checkbox from '@mui/material/Checkbox';
+import Button from '@mui/material/Button';
+import AddCircleRounded from '@mui/icons-material/AddCircleRounded';
+import ExpandLess from '@mui/icons-material/ExpandLess';
+import ExpandMore from '@mui/icons-material/ExpandMore';
+import EditRounded from '@mui/icons-material/EditRounded';
+import Save from '@mui/icons-material/Save';
+import DeleteForever from '@mui/icons-material/DeleteForever';
 
 import { Category, CreateCategory } from './Category';
 import type { ListProps, ListsProps, ListType } from '../../types';
@@ -18,10 +19,12 @@ import { SHOPPING_SERVER } from '../../App';
 import { ErrorContext } from '../../context/ErrorContext';
 import { ListsContext } from '../../context/ListContext';
 import { responseOK } from '../services/responseOK';
+import { PageContext } from '../../context/PageContext';
 
 export function Lists({ token }: ListsProps) {
   const { lists, setLists } = useContext(ListsContext);
-  const navigate = useNavigate();
+  const { setPage } = useContext(PageContext);
+  // const navigate = useNavigate();
   const { showError } = useContext(ErrorContext);
   const [status, setStatus] = useState<number | undefined>(0);
 
@@ -36,7 +39,7 @@ export function Lists({ token }: ListsProps) {
     try {
       if (!token) {
         console.log('No token found, going to login');
-        navigate('/login');
+        setPage('Login');
         return;
       }
 
@@ -61,11 +64,11 @@ export function Lists({ token }: ListsProps) {
           break;
         case 401:
           showError('Expired token, please login.');
-          navigate('/login');
+          setPage('Login');
           break;
         case 403:
           showError('No token provided, please login.');
-          navigate('/login');
+          setPage('Login');
           break;
         case 500:
         default:
@@ -81,7 +84,7 @@ export function Lists({ token }: ListsProps) {
     try {
       if (!token) {
         console.log('No token found, going to login');
-        navigate('/login');
+        setPage('Login');
         return;
       }
 
@@ -101,11 +104,11 @@ export function Lists({ token }: ListsProps) {
       switch (newStatus) {
         case 401:
           showError('Expired token, please login.');
-          navigate('/login');
+          setPage('Login');
           break;
         case 403:
           showError('No token provided, please login.');
-          navigate('/login');
+          setPage('Login');
           break;
         case 500:
         default:
@@ -126,7 +129,7 @@ export function Lists({ token }: ListsProps) {
       // console.log(JSON.parse(listJSON));
       // showError('Loaded lists from local storage.', true);
     } else {
-      showError('No lists found in local storage.');
+      // showError('No lists found in local storage.');
     }
   }
 

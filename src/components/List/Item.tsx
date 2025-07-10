@@ -1,8 +1,14 @@
 import { useState } from 'react';
-import { Checkbox, Button, Tooltip } from '@mui/material';
-import type { ItemType, ItemProps, CreateItemProps } from '../../types';
-import { EditRounded, Save, DeleteForever } from '@mui/icons-material';
+// import { Checkbox, Button, Tooltip } from '@mui/material';
+import Checkbox from '@mui/material/Checkbox';
+import Tooltip from '@mui/material/Tooltip';
+import Button from '@mui/material/Button';
+import EditRounded from '@mui/icons-material/EditRounded';
+import Save from '@mui/icons-material/Save';
+import DeleteForever from '@mui/icons-material/DeleteForever';
 import { v4 as uuidv4 } from 'uuid';
+
+import type { ItemType, ItemProps, CreateItemProps } from '../../types';
 
 export function CreateItem({
   cat,

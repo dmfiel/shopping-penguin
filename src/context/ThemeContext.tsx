@@ -1,4 +1,4 @@
-import { Tooltip } from '@mui/material';
+import Tooltip from '@mui/material/Tooltip';
 import React, { useContext, useEffect, useState, type ReactNode } from 'react';
 
 export const ThemeContext = React.createContext({

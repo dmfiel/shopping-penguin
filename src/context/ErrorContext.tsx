@@ -13,7 +13,7 @@ export const ErrorContext = React.createContext({
 function ErrorProvider({ children }: { children: ReactNode }) {
   const [errorMessage, setError] = useState<string>('');
   const [isSuccess, setSuccess] = useState<boolean>(false);
-  const [clearTimer, setClearTimer] = useState(0);
+  const [clearTimer, setClearTimer] = useState<NodeJS.Timeout>();
 
   function showError(
     message: string,

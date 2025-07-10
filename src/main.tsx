@@ -6,6 +6,7 @@ import App from './App.tsx';
 import ErrorProvider from './context/ErrorContext.tsx';
 import ThemeProvider from './context/ThemeContext.tsx';
 import ListsProvider from './context/ListContext.tsx';
+import PageProvider from './context/PageContext.tsx';
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
@@ -13,7 +14,9 @@ createRoot(document.getElementById('root')!).render(
       <ErrorProvider>
         <ThemeProvider>
           <ListsProvider>
-            <App />
+            <PageProvider>
+              <App />
+            </PageProvider>
           </ListsProvider>
         </ThemeProvider>
       </ErrorProvider>

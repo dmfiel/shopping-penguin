@@ -1,3 +1,5 @@
+export type Pages = 'Home' | 'Login' | 'Register';
+
 export type ListType = {
   id: string;
   list: string;
