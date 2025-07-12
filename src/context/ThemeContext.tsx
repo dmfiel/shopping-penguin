@@ -1,3 +1,4 @@
+/* eslint-disable react-refresh/only-export-components */
 import Tooltip from '@mui/material/Tooltip';
 import React, { useContext, useEffect, useState, type ReactNode } from 'react';
 
@@ -16,6 +17,7 @@ function ThemeProvider({ children }: { children: ReactNode }) {
 
   // Allow the user to modify their dark mode preference externally
   const darkModePreference = window.matchMedia('(prefers-color-scheme: dark)');
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => setTheme(darkModePreference.matches ? 'dark' : 'light'), []);
   darkModePreference.addEventListener('change', e =>
     setTheme(e.matches ? 'dark' : 'light')

@@ -30,7 +30,7 @@ export function CreateItem({
     }
   }
   function saveEndEdit() {
-    let newItem: ItemType = {
+    const newItem: ItemType = {
       id: uuidv4(),
       item: '',
       deleted: false,
@@ -78,12 +78,12 @@ export function CreateItem({
 }
 
 export function Item({ item, cat, list, saveLists }: ItemProps) {
-  if (item.deleted) return;
-  if (!item.completed) item.completed = false;
-  const [checked, setChecked] = useState(item.completed);
+  const [checked, setChecked] = useState(item.completed || false);
   const [edit, setEdit] = useState(false);
   const [input, setInput] = useState(item.item);
   const [inputSave, setInputSave] = useState(item.item);
+
+  if (item.deleted) return;
   // console.log('Render Item: ', item);
 
   function onChangeHandler() {

@@ -17,6 +17,7 @@ export function Login({
   useEffect(() => {
     if (username && username.length > 0)
       document.getElementById('password')?.focus();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {

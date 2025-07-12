@@ -34,6 +34,9 @@ export type ItemType = {
 
 export interface ListsProps {
   token: string | null;
+  shoppingServer: string;
+  loading: boolean;
+  setLoading: (_loading: boolean) => void;
 }
 
 export interface ListProps {

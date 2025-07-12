@@ -1,9 +1,11 @@
 import React, { useState, type ReactNode } from 'react';
 import type { Pages } from '../types';
 
+// eslint-disable-next-line react-refresh/only-export-components
 export const PageContext = React.createContext({
   page: 'Home',
-  setPage: (_Page: Pages): void => undefined
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  setPage: (_page: Pages): void => undefined
 });
 
 function PageProvider({ children }: { children: ReactNode }) {

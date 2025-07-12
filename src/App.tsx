@@ -20,9 +20,18 @@ import { ListsContext } from './context/ListContext';
 import { responseOK } from './components/services/responseOK';
 import { PageContext } from './context/PageContext';
 import { LoadingSpinner } from './components/LoadingSpinner/LoadingSpinner';
-// export const SHOPPING_SERVER = 'http://localhost:8080';
-export const SHOPPING_SERVER = 'https://shopping-penguin-server.onrender.com';
+
 export const HOST_DIRECTORY = '/shopping-penguin';
+const LOCAL_SERVER = 'http://localhost:8080';
+const REMOTE_SERVER = 'https://shopping-penguin-server.onrender.com';
+let shoppingServer: string = REMOTE_SERVER;
+const DEBUG_USE_REMOTE = true;
+
+function setupServerURL() {
+  if (window.location.host.includes('localhost'))
+    shoppingServer = DEBUG_USE_REMOTE ? REMOTE_SERVER : LOCAL_SERVER;
+  if (window.location.host.includes('fiel.us')) shoppingServer = REMOTE_SERVER;
+}
 
 export default function App() {
   const { theme } = useContext(ThemeContext);
@@ -35,6 +44,8 @@ export default function App() {
   useEffect(() => {
     if (!token) pullLocalToken();
   });
+
+  setupServerURL();
 
   function pullLocalToken(): string | null {
     const savedToken = localStorage.getItem('accessToken');
@@ -50,7 +61,7 @@ export default function App() {
     try {
       setLoading(true);
       const roles = ['user'];
-      const response = await axios.post(SHOPPING_SERVER + '/api/auth/signup', {
+      const response = await axios.post(shoppingServer + '/api/auth/signup', {
         username,
         email,
         password,
@@ -76,7 +87,7 @@ export default function App() {
   const handleLogin = async (username: string, password: string) => {
     try {
       setLoading(true);
-      const response = await axios.post(SHOPPING_SERVER + '/api/auth/signin', {
+      const response = await axios.post(shoppingServer + '/api/auth/signin', {
         username,
         password
       });
@@ -155,7 +166,14 @@ export default function App() {
       </header>
       <ErrorMessage />
       <div id="primary" className="flex-1 mx-auto max-w-[1280px]">
-        {page === 'Home' && <Lists token={token} />}
+        {page === 'Home' && (
+          <Lists
+            token={token}
+            shoppingServer={shoppingServer}
+            loading={loading}
+            setLoading={setLoading}
+          />
+        )}
         {page === 'Login' && <Login onLogin={handleLogin} />}
         {page === 'Register' && <Register onRegister={handleRegister} />}
         {/* <Routes>

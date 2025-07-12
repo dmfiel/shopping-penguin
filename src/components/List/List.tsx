@@ -15,13 +15,17 @@ import DeleteForever from '@mui/icons-material/DeleteForever';
 
 import { Category, CreateCategory } from './Category';
 import type { ListProps, ListsProps, ListType } from '../../types';
-import { SHOPPING_SERVER } from '../../App';
 import { ErrorContext } from '../../context/ErrorContext';
 import { ListsContext } from '../../context/ListContext';
 import { responseOK } from '../services/responseOK';
 import { PageContext } from '../../context/PageContext';
 
-export function Lists({ token }: ListsProps) {
+export function Lists({
+  token,
+  shoppingServer,
+  loading,
+  setLoading
+}: ListsProps) {
   const { lists, setLists } = useContext(ListsContext);
   const { setPage } = useContext(PageContext);
   // const navigate = useNavigate();
@@ -32,6 +36,7 @@ export function Lists({ token }: ListsProps) {
 
   useEffect(() => {
     if (!lists || lists.length === 0) fetchLists();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   async function fetchLists() {
@@ -43,10 +48,12 @@ export function Lists({ token }: ListsProps) {
         return;
       }
 
+      setLoading(true);
       // pull lists from Mongo
-      const response = await axios.get(SHOPPING_SERVER + '/api/lists', {
+      const response = await axios.get(shoppingServer + '/api/lists', {
         headers: { Authorization: token }
       });
+      setLoading(false);
 
       setStatus(response.status);
       if (responseOK(response)) {
@@ -55,6 +62,8 @@ export function Lists({ token }: ListsProps) {
       } else throw new Error();
       // showError('Successfully read lists from database.', true);
     } catch (error) {
+      setLoading(false);
+
       const newStatus = (error as AxiosError).status;
       setStatus(newStatus);
       switch (newStatus) {
@@ -88,17 +97,20 @@ export function Lists({ token }: ListsProps) {
         return;
       }
 
+      setLoading(true);
       // console.log('saving listJSON:', listJSON);
       // save lists into Mongo
-      const response = await axios.post(SHOPPING_SERVER + '/api/lists', lists, {
+      const response = await axios.post(shoppingServer + '/api/lists', lists, {
         headers: { Authorization: token }
       });
+      setLoading(false);
 
       setStatus(response.status);
       if (responseOK(response)) {
         // showError('Successfully saved lists into database.', true);
       } else throw new Error();
     } catch (error) {
+      setLoading(false);
       const newStatus = (error as AxiosError).status;
       setStatus(newStatus);
       switch (newStatus) {
@@ -120,8 +132,8 @@ export function Lists({ token }: ListsProps) {
   }
 
   function getLocalLists() {
-    let username = localStorage.getItem('username') || '';
-    let listJSON = localStorage.getItem('shoppingLists:' + username);
+    const username = localStorage.getItem('username') || '';
+    const listJSON = localStorage.getItem('shoppingLists:' + username);
     // console.log(listJSON);
     if (listJSON) {
       const newLists = JSON.parse(listJSON);
@@ -135,6 +147,7 @@ export function Lists({ token }: ListsProps) {
 
   useEffect(() => {
     if (status === 404) getLocalLists();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [status]);
 
   function createList() {
@@ -165,7 +178,7 @@ export function Lists({ token }: ListsProps) {
     if (!lists || lists.length === 0) return;
     // console.log('savelists lists: ', lists);
     const listJSON = JSON.stringify(lists);
-    let username = localStorage.getItem('username') || '';
+    const username = localStorage.getItem('username') || '';
     localStorage.setItem('shoppingLists:' + username, listJSON);
     pushLists();
     forceUpdate();
@@ -173,35 +186,36 @@ export function Lists({ token }: ListsProps) {
 
   const forceUpdate = useReducer(() => ({}), 0)[1];
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => saveLists(), [lists]);
 
   return (
     <div className="mx-auto">
-      {!lists ||
-        (lists.length === 0 && (
-          <div className="flex flex-col gap-3">
-            <h1 className="text-center">
-              You don't have any lists.
-              <br />
-              How would you like to proceed?
-            </h1>
-            <button
-              type="button"
-              className="bg-blue-300 hover:bg-blue-400 focus:bg-blue-400 dark:bg-blue-700 dark:hover:bg-blue-600 dark:focus:bg-blue-600 px-3 rounded-md"
-              onClick={() => createList()}
-            >
-              Create a new list
-            </button>
-            <button
-              type="button"
-              className="bg-blue-300 hover:bg-blue-400 focus:bg-blue-400 dark:bg-blue-700 dark:hover:bg-blue-600 dark:focus:bg-blue-600 px-3 rounded-md"
-              onClick={() => sampleData()}
-            >
-              Load some sample data
-            </button>
-          </div>
-        ))}
-      {lists &&
+      {!loading && (!lists || lists.length === 0) && (
+        <div className="flex flex-col gap-3">
+          <h1 className="text-center">
+            You don't have any lists.
+            <br />
+            How would you like to proceed?
+          </h1>
+          <button
+            type="button"
+            className="bg-blue-300 hover:bg-blue-400 focus:bg-blue-400 dark:bg-blue-700 dark:hover:bg-blue-600 dark:focus:bg-blue-600 px-3 rounded-md"
+            onClick={() => createList()}
+          >
+            Create a new list
+          </button>
+          <button
+            type="button"
+            className="bg-blue-300 hover:bg-blue-400 focus:bg-blue-400 dark:bg-blue-700 dark:hover:bg-blue-600 dark:focus:bg-blue-600 px-3 rounded-md"
+            onClick={() => sampleData()}
+          >
+            Load some sample data
+          </button>
+        </div>
+      )}
+      {!loading &&
+        lists &&
         lists.length > 0 &&
         lists.map(list => (
           <List list={list} lists={lists} key={list.id} saveLists={saveLists} />

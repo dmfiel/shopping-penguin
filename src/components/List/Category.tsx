@@ -38,7 +38,7 @@ export function CreateCategory({
     }
   }
   function saveEndEdit() {
-    let newCategory: CategoryType = {
+    const newCategory: CategoryType = {
       id: uuidv4(),
       category: '',
       items: new Array<ItemType>(),
