@@ -118,7 +118,7 @@ export default function App() {
   };
 
   function createList() {
-    const listJSON = `{"list":"New List","id":"${uuidv4()}","shown":"true","categories":[]}`;
+    const listJSON = `{"list":"New List","id":"${uuidv4()}","shown":"true","editList":"true","createCategory":"true","categories":[]}`;
     const newList: ListType = JSON.parse(listJSON);
     const newLists = new Array<ListType>(...lists);
     newLists.push(newList);

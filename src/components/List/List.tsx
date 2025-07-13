@@ -151,11 +151,10 @@ export function Lists({
   }, [status]);
 
   function createList() {
-    const listJSON = `{"list":"New List","id":"${uuidv4()}","shown":"true","categories":[]}`;
+    const listJSON = `{"list":"New List","id":"${uuidv4()}","shown":"true","editList":"true","createCategory":"true","categories":[]}`;
     const newList: ListType = JSON.parse(listJSON);
     newList.created = new Date();
     newList.modified = new Date();
-
     const newLists = new Array<ListType>(...lists);
     newLists.push(newList);
     // console.log('creating list: ', lists);
@@ -214,8 +213,7 @@ export function Lists({
           </button>
         </div>
       )}
-      {!loading &&
-        lists &&
+      {lists &&
         lists.length > 0 &&
         lists.map(list => (
           <List list={list} lists={lists} key={list.id} saveLists={saveLists} />
@@ -226,10 +224,10 @@ export function Lists({
 
 export function List({ list, saveLists }: ListProps) {
   const [checked, setChecked] = useState<boolean>(list.shown);
-  const [edit, setEdit] = useState<boolean>(false);
+  const [edit, setEdit] = useState<boolean>(list.editList || false);
   const [input, setInput] = useState<string>(list.list);
   const [inputSave, setInputSave] = useState<string>(list.list);
-  const [create, setCreate] = useState<boolean>(false);
+  const [create, setCreate] = useState<boolean>(list.createCategory || false);
   // console.log('in List', list);
 
   if (list.deleted === undefined) list.deleted = false;
@@ -264,7 +262,7 @@ export function List({ list, saveLists }: ListProps) {
     if (input) list.list = input;
     if (!list.created) list.created = new Date();
     list.modified = new Date();
-
+    list.editList = false;
     saveLists();
   }
 
@@ -320,7 +318,7 @@ export function List({ list, saveLists }: ListProps) {
             <input
               autoFocus
               type="text"
-              value={input}
+              value={input === 'New List' ? '' : input}
               onChange={e => saveInput(e)}
               onBlur={() => saveEndEdit()}
               onKeyDown={e => inputKey(e)}
@@ -359,7 +357,7 @@ export function List({ list, saveLists }: ListProps) {
           </Button>
         </Tooltip>
       </div>
-      {create && (
+      {!edit && create && (
         <CreateCategory
           list={list}
           saveLists={saveLists}

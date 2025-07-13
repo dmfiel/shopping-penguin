@@ -26,6 +26,8 @@ export function CreateItem({
       saveEndEdit();
     }
     if (e.key === 'Escape') {
+      cat.createItem = false;
+
       setCreate(false);
     }
   }
@@ -45,10 +47,15 @@ export function CreateItem({
       list.modified = new Date();
       if (!cat.items) cat.items = [];
       cat.items.push(newItem);
-
+      // create another new item after saving this one
+      // ToDo: make this an option later
+      cat.createItem = true;
+      setInput('');
       saveLists();
+    } else {
+      cat.createItem = false;
+      setCreate(false);
     }
-    setCreate(false);
   }
 
   return (
@@ -143,7 +150,9 @@ export function Item({ item, cat, list, saveLists }: ItemProps) {
       >
         <Checkbox checked={checked} onChange={onChangeHandler} />
       </Tooltip>
-      {!edit && <h4 onClick={onChangeHandler}>{input}</h4>}
+      {/* disabled, too easy to click to mark as Done
+      onClick={onChangeHandler} */}
+      {!edit && <h4>{input}</h4>}
       {edit && (
         <div className="flex">
           <input

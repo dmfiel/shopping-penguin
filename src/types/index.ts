@@ -8,6 +8,8 @@ export type ListType = {
   shown: boolean;
   created?: Date;
   modified?: Date;
+  editList?: boolean;
+  createCategory?: boolean;
 };
 
 export type CategoryType = {
@@ -18,6 +20,7 @@ export type CategoryType = {
   shown: boolean;
   created?: Date;
   modified?: Date;
+  createItem?: boolean;
 };
 
 export type ItemType = {

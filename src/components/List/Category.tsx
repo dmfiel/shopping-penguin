@@ -49,6 +49,7 @@ export function CreateCategory({
       newCategory.category = input;
       newCategory.created = new Date();
       newCategory.modified = new Date();
+      newCategory.createItem = true;
       if (!list.categories) list.categories = [];
       list.modified = new Date();
       list.categories.push(newCategory);
@@ -92,7 +93,7 @@ export function CreateCategory({
 export function Category({ cat, list, saveLists }: CategoryProps) {
   const [checked, setChecked] = useState<boolean>(cat.shown);
   const [edit, setEdit] = useState<boolean>(false);
-  const [create, setCreate] = useState<boolean>(false);
+  const [create, setCreate] = useState<boolean>(cat.createItem || false);
   const [input, setInput] = useState<string>(cat.category);
   const [inputSave, setInputSave] = useState<string>(cat.category);
 
