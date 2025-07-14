@@ -18,6 +18,7 @@ import type {
   CategoryProps
 } from '../../types';
 import { Item, CreateItem } from './Item';
+import { catCountOpen } from '../services/catCountOpen';
 
 export function CreateCategory({
   list,
@@ -87,14 +88,6 @@ export function CreateCategory({
         </Button>
       </Tooltip>
     </div>
-  );
-}
-
-export function catCountOpen(cat: CategoryType): number {
-  return (
-    cat &&
-    cat.items &&
-    cat.items.filter(item => item && !item.completed && !item.deleted).length
   );
 }
 

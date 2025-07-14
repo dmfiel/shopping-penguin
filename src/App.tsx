@@ -58,6 +58,11 @@ export default function App() {
     return savedToken ? savedToken : null;
   }
 
+  function saveToken(token: string) {
+    setToken(token);
+    localStorage.setItem('accessToken', token);
+  }
+
   const handleRegister = async (
     username: string,
     email: string,
@@ -99,8 +104,7 @@ export default function App() {
       // console.log('response: ', response);
       setLoading(false);
       if (responseOK(response)) {
-        setToken(response.data.accessToken);
-        localStorage.setItem('accessToken', response.data.accessToken);
+        saveToken(response.data.accessToken);
         localStorage.setItem('username', username);
         // showError('Login successful.', true);
         setPage('Home');
@@ -174,6 +178,7 @@ export default function App() {
         {page === 'Home' && (
           <Lists
             token={token}
+            saveToken={saveToken}
             shoppingServer={shoppingServer}
             loading={loading}
             setLoading={setLoading}

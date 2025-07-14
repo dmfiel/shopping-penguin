@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 // import { Checkbox, Button, Tooltip } from '@mui/material';
 import Checkbox from '@mui/material/Checkbox';
 import Tooltip from '@mui/material/Tooltip';
@@ -6,6 +6,7 @@ import Button from '@mui/material/Button';
 import EditRounded from '@mui/icons-material/EditRounded';
 import Save from '@mui/icons-material/Save';
 import DeleteForever from '@mui/icons-material/DeleteForever';
+import Settings from '@mui/icons-material/Settings';
 import { v4 as uuidv4 } from 'uuid';
 
 import type { ItemType, ItemProps, CreateItemProps } from '../../types';
@@ -89,6 +90,15 @@ export function Item({ item, cat, list, saveLists }: ItemProps) {
   const [edit, setEdit] = useState(false);
   const [input, setInput] = useState(item.item);
   const [inputSave, setInputSave] = useState(item.item);
+  const [showSettings, setShowSettings] = useState(false);
+
+  // auto-hide the settings (delete button) to avoid accidents
+  useEffect(() => {
+    if (showSettings) {
+      const timer = setTimeout(() => setShowSettings(false), 5000);
+      return () => clearTimeout(timer);
+    }
+  }, [showSettings]);
 
   if (item.deleted) return;
   // console.log('Render Item: ', item);
@@ -140,6 +150,7 @@ export function Item({ item, cat, list, saveLists }: ItemProps) {
 
     saveLists();
   }
+
   return (
     <div className="item ml-5 text-base font-normal flex items-center cursor-pointer">
       {/* label={input} */}
@@ -188,11 +199,18 @@ export function Item({ item, cat, list, saveLists }: ItemProps) {
           </Button>
         </Tooltip>
       )}{' '}
-      <Tooltip title="Delete Item" disableInteractive arrow>
-        <Button onClick={deleteItem}>
-          <DeleteForever />
+      <Tooltip title="Settings" disableInteractive arrow>
+        <Button onClick={() => setShowSettings(!showSettings)}>
+          <Settings />
         </Button>
       </Tooltip>
+      {showSettings && (
+        <Tooltip title="Delete Item" disableInteractive arrow>
+          <Button onClick={deleteItem}>
+            <DeleteForever />
+          </Button>
+        </Tooltip>
+      )}
     </div>
   );
 }

@@ -13,7 +13,7 @@ import EditRounded from '@mui/icons-material/EditRounded';
 import Save from '@mui/icons-material/Save';
 import DeleteForever from '@mui/icons-material/DeleteForever';
 
-import { catCountOpen, Category, CreateCategory } from './Category';
+import { Category, CreateCategory } from './Category';
 import type { ItemCatType, ListProps, ListsProps, ListType } from '../../types';
 
 import { ErrorContext } from '../../context/ErrorContext';
@@ -21,9 +21,11 @@ import { ListsContext } from '../../context/ListContext';
 import { responseOK } from '../services/responseOK';
 import { PageContext } from '../../context/PageContext';
 import { Item } from './Item';
+import { catCountOpen } from '../services/catCountOpen';
 
 export function Lists({
   token,
+  saveToken,
   shoppingServer,
   loading,
   setLoading
@@ -61,6 +63,7 @@ export function Lists({
       if (responseOK(response)) {
         // console.log('/lists response: ', response.data.lists);
         setLists(response.data.lists);
+        saveToken(response.data.accessToken);
       } else throw new Error();
       // showError('Successfully read lists from database.', true);
     } catch (error) {
@@ -397,7 +400,7 @@ export function List({ list, saveLists }: ListProps) {
         list.categories &&
         list.categories.length > 0 &&
         list.categories
-          .filter(cat => catCountOpen(cat) > 0)
+          .filter(cat => catCountOpen(cat) > 0 || cat.createItem)
           .map(cat => (
             <Category
               cat={cat}
@@ -471,7 +474,7 @@ function EmptyCategories({
   if (!list.categories || list.categories.length === 0) return;
   // console.log(list);
   const cats = list.categories
-    .filter(cat => catCountOpen(cat) === 0)
+    .filter(cat => catCountOpen(cat) === 0 && !cat.createItem)
     .sort((a, b) => (a.category > b.category ? 1 : -1));
   // console.log(cats);
   if (!cats || cats.length === 0) return;

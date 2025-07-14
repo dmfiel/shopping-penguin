@@ -38,6 +38,7 @@ export type ItemType = {
 export type ItemCatType = { item: ItemType; cat: CategoryType };
 export interface ListsProps {
   token: string | null;
+  saveToken: (token: string) => void;
   shoppingServer: string;
   loading: boolean;
   setLoading: (_loading: boolean) => void;
