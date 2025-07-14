@@ -12,7 +12,12 @@ import type { ListType } from './types';
 import { Lists } from './components/List/List';
 import { Login } from './pages/Login';
 // import { NotFoundPage } from './pages/NotFoundPage';
-import { ThemeButton, ThemeContext } from './context/ThemeContext';
+import {
+  BG_DARK,
+  BG_LIGHT,
+  ThemeButton,
+  ThemeContext
+} from './context/ThemeContext';
 import { ErrorContext } from './context/ErrorContext';
 import { ErrorMessage } from './components/ErrorMessage/ErrorMessage';
 import { Register } from './pages/Register';
@@ -129,7 +134,7 @@ export default function App() {
   return (
     <div
       id="all"
-      className={`${theme} w-full h-full    dark:text-gray-200 flex flex-col gap-3 min-h-screen px-5 pt-5 bg-[#d0e5d9] text-[#08321a] dark:bg-[#202422]`}
+      className={`${theme} w-full h-full text-[#08321a] dark:text-gray-200 flex flex-col gap-3 min-h-screen px-5 pt-5 bg-[${BG_LIGHT}] dark:bg-[${BG_DARK}]`}
     >
       <header className="flex justify-between items-center w-full">
         <div>
@@ -187,7 +192,10 @@ export default function App() {
         </Routes> */}
       </div>
       {loading && <LoadingSpinner text="Connecting, please be patient..." />}
-      <footer role="contentinfo" className="flex justify-between items-end">
+      <footer
+        role="contentinfo"
+        className="flex justify-between items-end mb-3"
+      >
         <div>
           {token && (
             <button

@@ -1,6 +1,8 @@
 /* eslint-disable react-refresh/only-export-components */
 import Tooltip from '@mui/material/Tooltip';
 import React, { useContext, useEffect, useState, type ReactNode } from 'react';
+export const BG_LIGHT = '#d0e5d9';
+export const BG_DARK = '#202422';
 
 export const ThemeContext = React.createContext({
   theme: 'light',
@@ -10,17 +12,22 @@ export const ThemeContext = React.createContext({
 function ThemeProvider({ children }: { children: ReactNode }) {
   const [theme, setTheme] = useState<string>('dark');
 
+  const saveTheme = (newTheme: string) => {
+    document.body.style.background = newTheme === 'dark' ? BG_DARK : BG_LIGHT;
+    setTheme(newTheme);
+  };
+
   const toggleTheme = (): null => {
-    setTheme(prevTheme => (prevTheme === 'light' ? 'dark' : 'light'));
+    saveTheme(theme === 'light' ? 'dark' : 'light');
     return null;
   };
 
   // Allow the user to modify their dark mode preference externally
   const darkModePreference = window.matchMedia('(prefers-color-scheme: dark)');
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  useEffect(() => setTheme(darkModePreference.matches ? 'dark' : 'light'), []);
+  useEffect(() => saveTheme(darkModePreference.matches ? 'dark' : 'light'), []);
   darkModePreference.addEventListener('change', e =>
-    setTheme(e.matches ? 'dark' : 'light')
+    saveTheme(e.matches ? 'dark' : 'light')
   );
 
   return (
