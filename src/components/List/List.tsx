@@ -11,7 +11,7 @@ import Save from '@mui/icons-material/Save';
 import Settings from '@mui/icons-material/Settings';
 
 import type { ListProps } from '../../types';
-import { catCountOpen } from '../services/catCountOpen';
+import { catCountOpen } from '../../services/catCountOpen';
 import { Category, CreateCategory } from './Category';
 import { CompletedItems } from './CompletedItems';
 import { EmptyCategories } from './EmptyCategories';
@@ -174,6 +174,7 @@ export function List({ list, saveLists }: ListProps) {
         list.categories.length > 0 &&
         list.categories
           .filter(cat => catCountOpen(cat) > 0 || cat.createItem)
+          .sort((a, b) => (a.category > b.category ? 1 : -1))
           .map(cat => (
             <Category
               cat={cat}

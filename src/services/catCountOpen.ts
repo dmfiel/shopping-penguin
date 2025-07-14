@@ -1,4 +1,4 @@
-import type { CategoryType } from '../../types';
+import type { CategoryType } from '../types';
 
 export function catCountOpen(cat: CategoryType): number {
   return (

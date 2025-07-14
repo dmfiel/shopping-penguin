@@ -5,7 +5,7 @@ import ExpandLess from '@mui/icons-material/ExpandLess';
 import ExpandMore from '@mui/icons-material/ExpandMore';
 
 import type { ItemCatType, ListType } from '../../types';
-import { dateSubtract } from '../services/dateSubtract';
+import { dateSubtract } from '../../services/dateSubtract';
 import { Item } from './Item';
 
 export function CompletedItems({

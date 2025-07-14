@@ -18,7 +18,7 @@ import type {
   CategoryProps
 } from '../../types';
 import { Item, CreateItem } from './Item';
-import { catCountOpen } from '../services/catCountOpen';
+import { catCountOpen } from '../../services/catCountOpen';
 
 export function CreateCategory({
   list,
@@ -35,6 +35,7 @@ export function CreateCategory({
       saveEndEdit();
     }
     if (e.key === 'Escape') {
+      list.createCategory = false;
       setCreate(false);
     }
   }
@@ -46,6 +47,7 @@ export function CreateCategory({
       deleted: false,
       shown: true
     };
+    list.createCategory = false;
     if (input) {
       newCategory.category = input;
       newCategory.created = new Date();
@@ -54,7 +56,6 @@ export function CreateCategory({
       if (!list.categories) list.categories = [];
       list.modified = new Date();
       list.categories.push(newCategory);
-
       saveLists();
     }
     setCreate(false);

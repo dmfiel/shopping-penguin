@@ -1,17 +1,14 @@
 import './App.css';
-import { useEffect, useState, useContext } from 'react';
-// import { Route, Routes, useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import { useEffect, useState, useContext } from 'react';
 import { v4 as uuidv4 } from 'uuid';
-// import { Button, Tooltip } from '@mui/material';
-import Tooltip from '@mui/material/Tooltip';
 import Button from '@mui/material/Button';
+import Tooltip from '@mui/material/Tooltip';
 import AddCircleRounded from '@mui/icons-material/AddCircleRounded';
 
 import type { ListType } from './types';
-import { Lists } from './components/List/Lists';
 import { Login } from './pages/Login';
-// import { NotFoundPage } from './pages/NotFoundPage';
+import { Register } from './pages/Register';
 import {
   BG_DARK,
   BG_LIGHT,
@@ -19,12 +16,12 @@ import {
   ThemeContext
 } from './context/ThemeContext';
 import { ErrorContext } from './context/ErrorContext';
-import { ErrorMessage } from './components/ErrorMessage/ErrorMessage';
-import { Register } from './pages/Register';
 import { ListsContext } from './context/ListContext';
-import { responseOK } from './components/services/responseOK';
 import { PageContext } from './context/PageContext';
+import { ErrorMessage } from './components/ErrorMessage/ErrorMessage';
+import { Lists } from './components/List/Lists';
 import { LoadingSpinner } from './components/LoadingSpinner/LoadingSpinner';
+import { responseOK } from './services/responseOK';
 
 export const HOST_DIRECTORY = '/shopping-penguin';
 const LOCAL_SERVER = 'http://localhost:8080';

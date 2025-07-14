@@ -8,7 +8,7 @@ import type { ListsProps, ListType } from '../../types';
 import { ErrorContext } from '../../context/ErrorContext';
 import { ListsContext } from '../../context/ListContext';
 import { PageContext } from '../../context/PageContext';
-import { responseOK } from '../services/responseOK';
+import { responseOK } from '../../services/responseOK';
 import { List } from './List';
 
 export function Lists({

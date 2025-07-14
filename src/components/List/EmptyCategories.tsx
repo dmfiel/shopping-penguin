@@ -5,7 +5,7 @@ import ExpandLess from '@mui/icons-material/ExpandLess';
 import ExpandMore from '@mui/icons-material/ExpandMore';
 
 import type { ListType } from '../../types';
-import { catCountOpen } from '../services/catCountOpen';
+import { catCountOpen } from '../../services/catCountOpen';
 import { Category } from './Category';
 
 export function EmptyCategories({
