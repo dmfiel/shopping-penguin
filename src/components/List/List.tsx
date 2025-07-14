@@ -1,9 +1,7 @@
 import { useEffect, useState } from 'react';
-// import { useNavigate } from 'react-router-dom';
-// import { Checkbox, Button, Tooltip } from '@mui/material';
-import Tooltip from '@mui/material/Tooltip';
-import Checkbox from '@mui/material/Checkbox';
 import Button from '@mui/material/Button';
+import Checkbox from '@mui/material/Checkbox';
+import Tooltip from '@mui/material/Tooltip';
 import AddCircleRounded from '@mui/icons-material/AddCircleRounded';
 import DeleteForever from '@mui/icons-material/DeleteForever';
 import EditRounded from '@mui/icons-material/EditRounded';
@@ -12,11 +10,11 @@ import ExpandMore from '@mui/icons-material/ExpandMore';
 import Save from '@mui/icons-material/Save';
 import Settings from '@mui/icons-material/Settings';
 
-import { Category, CreateCategory } from './Category';
-import type { ItemCatType, ListProps, ListType } from '../../types';
-
-import { Item } from './Item';
+import type { ListProps } from '../../types';
 import { catCountOpen } from '../services/catCountOpen';
+import { Category, CreateCategory } from './Category';
+import { CompletedItems } from './CompletedItems';
+import { EmptyCategories } from './EmptyCategories';
 
 export function List({ list, saveLists }: ListProps) {
   const [checked, setChecked] = useState<boolean>(list.shown);
@@ -39,39 +37,6 @@ export function List({ list, saveLists }: ListProps) {
   if (list.deleted === undefined) list.deleted = false;
   if (list.shown === undefined) list.shown = true;
   if (list.deleted) return;
-
-  let itemCats = new Array<ItemCatType>();
-  if (list.categories && list.categories.length > 0) {
-    itemCats = list.categories.flatMap(
-      cat =>
-        cat.items &&
-        cat.items
-          .filter(item => item.completed)
-          .map(item => {
-            const ic: ItemCatType = {
-              item: item,
-              cat: cat
-            };
-            return ic;
-          })
-    );
-    // show the most recently completed first
-    itemCats = itemCats.sort(
-      (a, b) => -dateSubtract(a.item.lastCompleted, b.item.lastCompleted)
-    );
-  }
-
-  function dateSubtract(a?: Date, b?: Date) {
-    if (!a || !b) return 0;
-    try {
-      const diff = new Date(a).getTime() - new Date(b).getTime();
-      return diff;
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    } catch (err) {
-      console.log(err);
-      return 0;
-    }
-  }
 
   function onChangeHandler() {
     list.shown = !checked;
@@ -218,101 +183,7 @@ export function List({ list, saveLists }: ListProps) {
             />
           ))}
       {checked && <EmptyCategories list={list} saveLists={saveLists} />}
-      {checked && (
-        <CompletedItems itemCats={itemCats} list={list} saveLists={saveLists} />
-      )}
-    </div>
-  );
-}
-
-function CompletedItems({
-  itemCats,
-  list,
-  saveLists
-}: {
-  itemCats: ItemCatType[];
-  list: ListType;
-  saveLists: () => void;
-}) {
-  const [checked, setChecked] = useState<boolean>(false);
-
-  if (!itemCats || itemCats.length === 0) return;
-
-  return (
-    <div className="categoryContainer">
-      <div className="categorySelector text-lg font-medium flex items-center cursor-pointer">
-        <Tooltip
-          title={checked ? 'Hide Completed Items' : 'Show Completed'}
-          disableInteractive
-          arrow
-        >
-          <Checkbox
-            checked={checked}
-            onChange={() => setChecked(!checked)}
-            icon={<ExpandLess />}
-            checkedIcon={<ExpandMore />}
-            // label={cat.category}
-          />
-        </Tooltip>
-        <h3 className="category">
-          <i>Completed Items</i>
-        </h3>
-      </div>
-      {checked &&
-        itemCats.map(({ item, cat }) => (
-          <Item
-            item={item}
-            cat={cat}
-            list={list}
-            key={item.id}
-            saveLists={saveLists}
-          />
-        ))}
-    </div>
-  );
-}
-
-function EmptyCategories({
-  list,
-  saveLists
-}: {
-  list: ListType;
-  saveLists: () => void;
-}) {
-  const [checked, setChecked] = useState<boolean>(false);
-  // console.log('in empty cats');
-  if (!list.categories || list.categories.length === 0) return;
-  // console.log(list);
-  const cats = list.categories
-    .filter(cat => catCountOpen(cat) === 0 && !cat.createItem)
-    .sort((a, b) => (a.category > b.category ? 1 : -1));
-  // console.log(cats);
-  if (!cats || cats.length === 0) return;
-
-  return (
-    <div className="categoryContainer">
-      <div className="categorySelector text-lg font-medium flex items-center cursor-pointer">
-        <Tooltip
-          title={checked ? 'Hide Empty Categories' : 'Show Empty Categories'}
-          disableInteractive
-          arrow
-        >
-          <Checkbox
-            checked={checked}
-            onChange={() => setChecked(!checked)}
-            icon={<ExpandLess />}
-            checkedIcon={<ExpandMore />}
-            // label={cat.category}
-          />
-        </Tooltip>
-        <h3 className="category">
-          <i>Empty Categories</i>
-        </h3>
-      </div>
-      {checked &&
-        cats.map(cat => (
-          <Category cat={cat} list={list} key={cat.id} saveLists={saveLists} />
-        ))}
+      {checked && <CompletedItems list={list} saveLists={saveLists} />}
     </div>
   );
 }

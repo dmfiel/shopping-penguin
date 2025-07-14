@@ -1,14 +1,14 @@
 import { useEffect, useState } from 'react';
-// import { Checkbox, Button, Tooltip } from '@mui/material';
+import Button from '@mui/material/Button';
 import Checkbox from '@mui/material/Checkbox';
 import Tooltip from '@mui/material/Tooltip';
-import Button from '@mui/material/Button';
 import AddCircleRounded from '@mui/icons-material/AddCircleRounded';
+import DeleteForever from '@mui/icons-material/DeleteForever';
+import EditRounded from '@mui/icons-material/EditRounded';
 import ExpandLess from '@mui/icons-material/ExpandLess';
 import ExpandMore from '@mui/icons-material/ExpandMore';
-import EditRounded from '@mui/icons-material/EditRounded';
 import Save from '@mui/icons-material/Save';
-import DeleteForever from '@mui/icons-material/DeleteForever';
+import Settings from '@mui/icons-material/Settings';
 import { v4 as uuidv4 } from 'uuid';
 
 import type {
@@ -19,7 +19,6 @@ import type {
 } from '../../types';
 import { Item, CreateItem } from './Item';
 import { catCountOpen } from '../services/catCountOpen';
-import Settings from '@mui/icons-material/Settings';
 
 export function CreateCategory({
   list,
