@@ -35,6 +35,7 @@ export type ItemType = {
   countCompleted?: number;
 };
 
+export type ItemCatType = { item: ItemType; cat: CategoryType };
 export interface ListsProps {
   token: string | null;
   shoppingServer: string;

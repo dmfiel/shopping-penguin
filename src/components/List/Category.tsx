@@ -90,6 +90,14 @@ export function CreateCategory({
   );
 }
 
+export function catCountOpen(cat: CategoryType): number {
+  return (
+    cat &&
+    cat.items &&
+    cat.items.filter(item => item && !item.completed && !item.deleted).length
+  );
+}
+
 export function Category({ cat, list, saveLists }: CategoryProps) {
   const [checked, setChecked] = useState<boolean>(cat.shown);
   const [edit, setEdit] = useState<boolean>(false);
@@ -165,11 +173,7 @@ export function Category({ cat, list, saveLists }: CategoryProps) {
                 {!checked &&
                   cat.items &&
                   cat.items.length > 0 &&
-                  ' (' +
-                    cat.items.filter(
-                      item => item && !item.completed && !item.deleted
-                    ).length +
-                    ')'}
+                  ' (' + catCountOpen(cat) + ')'}
               </span>
             </Tooltip>
           </h3>
@@ -232,15 +236,17 @@ export function Category({ cat, list, saveLists }: CategoryProps) {
       {checked &&
         cat.items &&
         cat.items.length > 0 &&
-        cat.items.map(item => (
-          <Item
-            item={item}
-            cat={cat}
-            list={list}
-            key={item.id}
-            saveLists={saveLists}
-          />
-        ))}
+        cat.items
+          .filter(item => !item.completed)
+          .map(item => (
+            <Item
+              item={item}
+              cat={cat}
+              list={list}
+              key={item.id}
+              saveLists={saveLists}
+            />
+          ))}
     </div>
   );
 }

@@ -22,10 +22,6 @@
     "tailwindcss": "^4.1.10",
     "uuid": "^11.1.0"
   },
-  "peerDependencies": {
-    "react-router": "^7.6.3",
-    "react-router-dom": "^7.6.3"
-  },
   "devDependencies": {
     "@eslint/js": "latest",
     "@types/node": "^24.0.12",
