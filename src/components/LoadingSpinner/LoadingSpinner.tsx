@@ -2,7 +2,7 @@ import { RotatingLines } from 'react-loader-spinner';
 
 export function LoadingSpinner({ text }: { text?: string }) {
   return (
-    <div className="flex flex-col mx-auto mt-5">
+    <div className="flex flex-col mx-auto mt-1">
       {text ? <h1>{text}</h1> : ''}
       <div className="flex justify-center mt-5">
         <RotatingLines

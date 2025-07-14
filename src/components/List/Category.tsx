@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 // import { Checkbox, Button, Tooltip } from '@mui/material';
 import Checkbox from '@mui/material/Checkbox';
 import Tooltip from '@mui/material/Tooltip';
@@ -19,6 +19,7 @@ import type {
 } from '../../types';
 import { Item, CreateItem } from './Item';
 import { catCountOpen } from '../services/catCountOpen';
+import Settings from '@mui/icons-material/Settings';
 
 export function CreateCategory({
   list,
@@ -97,6 +98,15 @@ export function Category({ cat, list, saveLists }: CategoryProps) {
   const [create, setCreate] = useState<boolean>(cat.createItem || false);
   const [input, setInput] = useState<string>(cat.category);
   const [inputSave, setInputSave] = useState<string>(cat.category);
+  const [showSettings, setShowSettings] = useState(false);
+
+  // auto-hide the settings (delete button) to avoid accidents
+  useEffect(() => {
+    if (showSettings) {
+      const timer = setTimeout(() => setShowSettings(false), 5000);
+      return () => clearTimeout(timer);
+    }
+  }, [showSettings]);
 
   if (cat.deleted === undefined) cat.deleted = false;
   if (cat.shown === undefined) cat.shown = true;
@@ -212,6 +222,18 @@ export function Category({ cat, list, saveLists }: CategoryProps) {
             <AddCircleRounded />
           </Button>
         </Tooltip>
+        <Tooltip title="Settings" disableInteractive arrow>
+          <Button onClick={() => setShowSettings(!showSettings)}>
+            <Settings />
+          </Button>
+        </Tooltip>
+        {showSettings && (
+          <Tooltip title="Delete Category" disableInteractive arrow>
+            <Button onClick={deleteCategory}>
+              <DeleteForever />
+            </Button>
+          </Tooltip>
+        )}
         <Tooltip title="Delete Category" disableInteractive arrow>
           <Button onClick={deleteCategory}>
             <DeleteForever />

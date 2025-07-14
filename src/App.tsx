@@ -9,7 +9,7 @@ import Button from '@mui/material/Button';
 import AddCircleRounded from '@mui/icons-material/AddCircleRounded';
 
 import type { ListType } from './types';
-import { Lists } from './components/List/List';
+import { Lists } from './components/List/Lists';
 import { Login } from './pages/Login';
 // import { NotFoundPage } from './pages/NotFoundPage';
 import {
@@ -120,8 +120,7 @@ export default function App() {
   };
 
   const handleLogout = () => {
-    localStorage.setItem('accessToken', '');
-    setToken('');
+    saveToken('');
     setLists([]);
     setPage('Login');
   };
