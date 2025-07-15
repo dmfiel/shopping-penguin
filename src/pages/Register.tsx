@@ -26,27 +26,27 @@ export function Register({
     <div className="border rounded-lg bg-gray-200 dark:bg-gray-800 p-7">
       <form onSubmit={handleSubmit} className="flex flex-col gap-3">
         <input
-          autoFocus
-          type="text"
           placeholder="Username"
           value={username}
           onChange={e => setUsername(e.target.value)}
+          type="text"
+          autoFocus
           maxLength={100}
           className="border rounded-md py-1 px-2 w-50 min-w-24 bg-gray-300 dark:bg-gray-800 dark:text-gray-300"
         />{' '}
         <input
-          type="email"
           placeholder="Email Address"
           value={email}
           onChange={e => setEmail(e.target.value)}
+          type="email"
           maxLength={255}
           className="border rounded-md py-1 px-2 w-50 min-w-24 bg-gray-300 dark:bg-gray-800 dark:text-gray-300"
         />
         <input
-          type="password"
           placeholder="Password"
           value={password}
           onChange={e => setPassword(e.target.value)}
+          type="password"
           maxLength={100}
           className="border rounded-md py-1 px-2 w-50 min-w-24 bg-gray-300 dark:bg-gray-800 dark:text-gray-300"
         />

@@ -1,7 +1,7 @@
 import type { AxiosResponse } from 'axios';
 
-export function responseOK(response: AxiosResponse<any, any>): boolean {
-  console.log(response.status, response.statusText);
+export function responseOK(response: AxiosResponse): boolean {
+  // console.log(response.status, response.statusText);
   return (
     response &&
     response.status >= 200 &&

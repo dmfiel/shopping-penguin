@@ -114,6 +114,7 @@ export function List({ list, saveLists }: ListProps) {
         {edit && (
           <div className="flex">
             <input
+              placeholder="Store/List Name"
               autoFocus
               type="text"
               value={input === 'New List' ? '' : input}
@@ -121,7 +122,7 @@ export function List({ list, saveLists }: ListProps) {
               onBlur={() => saveEndEdit()}
               onKeyDown={e => inputKey(e)}
               maxLength={100}
-              className="field-sizing-content min-w-12"
+              className="field-sizing-content min-w-12 px-2"
             />
             <Button
               onClick={() => {
@@ -144,11 +145,18 @@ export function List({ list, saveLists }: ListProps) {
             </Button>
           </Tooltip>
         )}
-        <Tooltip title="Add Category" disableInteractive arrow>
-          <Button disabled={create} onClick={() => setCreate(true)}>
-            <AddCircleRounded />
-          </Button>
-        </Tooltip>
+        {!create && (
+          <Tooltip title="Add Category" disableInteractive arrow>
+            <Button
+              onClick={() => {
+                setCreate(true);
+                setChecked(true);
+              }}
+            >
+              <AddCircleRounded />
+            </Button>
+          </Tooltip>
+        )}
         <Tooltip title="Settings" disableInteractive arrow>
           <Button onClick={() => setShowSettings(!showSettings)}>
             <Settings />
@@ -173,7 +181,9 @@ export function List({ list, saveLists }: ListProps) {
         list.categories &&
         list.categories.length > 0 &&
         list.categories
-          .filter(cat => catCountOpen(cat) > 0 || cat.createItem)
+          .filter(
+            cat => (catCountOpen(cat) > 0 || cat.createItem) && !cat.deleted
+          )
           .sort((a, b) => (a.category > b.category ? 1 : -1))
           .map(cat => (
             <Category

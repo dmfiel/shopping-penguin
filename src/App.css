@@ -24,7 +24,7 @@ body {
   cursor: pointer;
   transition: border-color 0.25s;
   display: flex !important;
-  opacity: 10%;
+  opacity: 30%;
 }
 
 .MuiButton-root:hover,

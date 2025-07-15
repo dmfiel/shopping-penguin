@@ -62,7 +62,7 @@ export function CreateCategory({
   }
 
   return (
-    <div className="categorySelector text-lg font-medium flex items-center cursor-pointer">
+    <div className="categorySelector ml-5 text-lg font-medium flex items-center cursor-pointer">
       <Checkbox
         checked={false}
         disabled={true}
@@ -70,6 +70,7 @@ export function CreateCategory({
         checkedIcon={<ExpandMore />}
       />
       <input
+        placeholder="Category Name"
         autoFocus
         type="text"
         value={input}
@@ -77,7 +78,7 @@ export function CreateCategory({
         onBlur={() => saveEndEdit()}
         onKeyDown={e => inputKey(e)}
         maxLength={100}
-        className="field-sizing-content min-w-12"
+        className="field-sizing-content min-w-12 px-2"
       />
       <Tooltip title="Save Category" disableInteractive arrow>
         <Button
@@ -154,7 +155,7 @@ export function Category({ cat, list, saveLists }: CategoryProps) {
 
   return (
     <div className="categoryContainer">
-      <div className="categorySelector text-lg font-medium flex items-center cursor-pointer">
+      <div className="categorySelector ml-5 text-lg font-medium flex items-center cursor-pointer">
         <Tooltip
           title={checked ? 'Hide Category' : 'Show Category'}
           disableInteractive
@@ -184,6 +185,7 @@ export function Category({ cat, list, saveLists }: CategoryProps) {
         {edit && (
           <div className="flex">
             <input
+              placeholder="Category Name"
               autoFocus
               type="text"
               value={input}
@@ -191,7 +193,7 @@ export function Category({ cat, list, saveLists }: CategoryProps) {
               onBlur={() => saveEndEdit()}
               onKeyDown={e => inputKey(e)}
               maxLength={100}
-              className="field-sizing-content min-w-12"
+              className="field-sizing-content min-w-12 px-2"
             />
 
             <Tooltip title="Save Category" disableInteractive arrow>
@@ -217,11 +219,18 @@ export function Category({ cat, list, saveLists }: CategoryProps) {
             </Button>
           </Tooltip>
         )}
-        <Tooltip title="Add Item" disableInteractive arrow>
-          <Button disabled={create} onClick={() => setCreate(true)}>
-            <AddCircleRounded />
-          </Button>
-        </Tooltip>
+        {!create && (
+          <Tooltip title="Add Item" disableInteractive arrow>
+            <Button
+              onClick={() => {
+                setCreate(true);
+                setChecked(true);
+              }}
+            >
+              <AddCircleRounded />
+            </Button>
+          </Tooltip>
+        )}
         <Tooltip title="Settings" disableInteractive arrow>
           <Button onClick={() => setShowSettings(!showSettings)}>
             <Settings />
@@ -234,11 +243,6 @@ export function Category({ cat, list, saveLists }: CategoryProps) {
             </Button>
           </Tooltip>
         )}
-        <Tooltip title="Delete Category" disableInteractive arrow>
-          <Button onClick={deleteCategory}>
-            <DeleteForever />
-          </Button>
-        </Tooltip>
       </div>
       {create && (
         <CreateItem
@@ -252,7 +256,7 @@ export function Category({ cat, list, saveLists }: CategoryProps) {
         cat.items &&
         cat.items.length > 0 &&
         cat.items
-          .filter(item => !item.completed)
+          .filter(item => !item.completed && !item.deleted)
           .map(item => (
             <Item
               item={item}

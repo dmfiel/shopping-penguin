@@ -22,6 +22,7 @@ import { ErrorMessage } from './components/ErrorMessage/ErrorMessage';
 import { Lists } from './components/List/Lists';
 import { LoadingSpinner } from './components/LoadingSpinner/LoadingSpinner';
 import { responseOK } from './services/responseOK';
+import penguinLogo from './images/penguin.svg';
 
 export const HOST_DIRECTORY = '/shopping-penguin';
 const LOCAL_SERVER = 'http://localhost:8080';
@@ -148,9 +149,9 @@ export default function App() {
             </button>
           )}
         </div>
-        <div className="flex items-center">
+        <div className="flex items-center justify-center">
           <img
-            src="./images/penguin.svg"
+            src={penguinLogo}
             alt="Penguin logo."
             className="md:ml-5 w-16 md:w-20 lg:w-24"
           />

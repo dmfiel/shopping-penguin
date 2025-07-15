@@ -208,9 +208,16 @@ export function Lists({
       )}
       {lists &&
         lists.length > 0 &&
-        lists.map(list => (
-          <List list={list} lists={lists} key={list.id} saveLists={saveLists} />
-        ))}
+        lists
+          .filter(list => !list.deleted)
+          .map(list => (
+            <List
+              list={list}
+              lists={lists}
+              key={list.id}
+              saveLists={saveLists}
+            />
+          ))}
     </div>
   );
 }

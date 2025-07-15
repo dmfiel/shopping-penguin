@@ -59,9 +59,10 @@ export function CreateItem({
   }
 
   return (
-    <div className="item ml-5 text-base font-normal flex items-center cursor-pointer">
+    <div className="item ml-10 text-base font-normal flex items-center cursor-pointer">
       <Checkbox disabled={true} />{' '}
       <input
+        placeholder="Item Name"
         autoFocus
         type="text"
         value={input}
@@ -69,7 +70,7 @@ export function CreateItem({
         onBlur={() => saveEndEdit()}
         onKeyDown={e => inputKey(e)}
         maxLength={100}
-        className="field-sizing-content min-w-12"
+        className="field-sizing-content min-w-12 px-2"
       />
       <Tooltip title="Save Item" disableInteractive arrow>
         <Button
@@ -151,7 +152,7 @@ export function Item({ item, cat, list, saveLists }: ItemProps) {
   }
 
   return (
-    <div className="item ml-5 text-base font-normal flex items-center cursor-pointer">
+    <div className="item ml-10 text-base font-normal flex items-center cursor-pointer">
       {/* label={input} */}
       <Tooltip
         title={checked ? 'Mark as Not Done' : 'Mark as Done'}
@@ -166,6 +167,7 @@ export function Item({ item, cat, list, saveLists }: ItemProps) {
       {edit && (
         <div className="flex">
           <input
+            placeholder="Item Name"
             autoFocus
             type="text"
             value={input}
@@ -173,7 +175,7 @@ export function Item({ item, cat, list, saveLists }: ItemProps) {
             onBlur={() => saveEndEdit()}
             onKeyDown={e => inputKey(e)}
             maxLength={100}
-            className="field-sizing-content min-w-12"
+            className="field-sizing-content min-w-12 px-2"
           />
           <Tooltip title="Save Item" disableInteractive arrow>
             <Button

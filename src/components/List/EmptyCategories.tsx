@@ -27,7 +27,7 @@ export function EmptyCategories({
 
   return (
     <div className="categoryContainer">
-      <div className="categorySelector text-lg font-medium flex items-center cursor-pointer">
+      <div className="categorySelector ml-5 text-lg font-medium flex items-center cursor-pointer">
         <Tooltip
           title={checked ? 'Hide Empty Categories' : 'Show Empty Categories'}
           disableInteractive
