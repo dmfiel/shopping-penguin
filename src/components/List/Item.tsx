@@ -27,7 +27,7 @@ export function CreateItem({
     }
     if (e.key === 'Escape') {
       cat.createItem = false;
-
+      saveLists();
       setCreate(false);
     }
   }
@@ -54,6 +54,7 @@ export function CreateItem({
       saveLists();
     } else {
       cat.createItem = false;
+      saveLists();
       setCreate(false);
     }
   }
