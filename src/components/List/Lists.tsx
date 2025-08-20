@@ -104,8 +104,10 @@ export function Lists({
       setStatus(newStatus);
       switch (newStatus) {
         case 404:
-          showError('No list found for user.');
-          setLists([]);
+          // user hasn't created anything yet, so don't try to update lists from server
+          // showError('No list found for user.');
+          // setLists([]);
+          return true;
           break;
         case 401:
           showError('Expired token, please login.');

@@ -50,6 +50,7 @@ export function CreateItem({
       // create another new item after saving this one
       // ToDo: make this an option later
       cat.createItem = true;
+      cat.shown = true;
       setInput('');
       saveLists();
     } else {

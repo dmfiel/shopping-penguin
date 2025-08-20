@@ -104,6 +104,7 @@ export function List({ list, saveLists }: ListProps) {
                   list.categories.length > 0 &&
                   ' (' +
                     list.categories
+                      .filter(cat => !cat.deleted)
                       .map(cat => catCountOpen(cat))
                       .reduce((total, cat) => total + cat) +
                     ')'}
