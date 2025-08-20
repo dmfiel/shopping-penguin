@@ -45,10 +45,17 @@ export function EmptyCategories({
           <i>Empty Categories</i>
         </h3>
       </div>
-      {checked &&
-        cats.map(cat => (
-          <Category cat={cat} list={list} key={cat.id} saveLists={saveLists} />
-        ))}
+      <div className="ml-5">
+        {checked &&
+          cats.map(cat => (
+            <Category
+              cat={cat}
+              list={list}
+              key={cat.id}
+              saveLists={saveLists}
+            />
+          ))}
+      </div>
     </div>
   );
 }
