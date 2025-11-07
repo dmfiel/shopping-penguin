@@ -22,7 +22,7 @@ export function Lists({
   const { setPage } = useContext(PageContext);
   // const navigate = useNavigate();
   const { showError } = useContext(ErrorContext);
-  const [status, setStatus] = useState<number | undefined>(0);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [listsModDate, setListsModDate] = useState<string>('');
 
   // console.log('in Lists', lists && lists.length, lists);
@@ -48,7 +48,6 @@ export function Lists({
       });
       setLoading(false);
 
-      setStatus(response.status);
       if (responseOK(response)) {
         // console.log('/lists response: ', response.data.lists);
         setLists(response.data.lists);
@@ -60,7 +59,6 @@ export function Lists({
       setLoading(false);
 
       const newStatus = (error as AxiosError).status;
-      setStatus(newStatus);
       switch (newStatus) {
         case 404:
           showError('No list found for user.');
@@ -101,7 +99,6 @@ export function Lists({
       } else throw new Error();
     } catch (error) {
       const newStatus = (error as AxiosError).status;
-      setStatus(newStatus);
       switch (newStatus) {
         case 404:
           // user hasn't created anything yet, so don't try to update lists from server
@@ -160,7 +157,6 @@ export function Lists({
       });
       setLoading(false);
 
-      setStatus(response.status);
       if (responseOK(response)) {
         // showError('Successfully saved lists into database.', true);
         setListsModDate(response.data.updatedAt);
@@ -169,7 +165,6 @@ export function Lists({
     } catch (error) {
       setLoading(false);
       const newStatus = (error as AxiosError).status;
-      setStatus(newStatus);
       switch (newStatus) {
         case 401:
           showError('Expired token, please login.');
@@ -187,25 +182,6 @@ export function Lists({
       console.error('Error saving lists:', error);
     }
   }
-
-  function getLocalLists() {
-    const username = localStorage.getItem('username') || '';
-    const listJSON = localStorage.getItem('shoppingLists:' + username);
-    // console.log(listJSON);
-    if (listJSON) {
-      const newLists = JSON.parse(listJSON);
-      if (newLists && newLists.length > 0) setLists(newLists);
-      // console.log(JSON.parse(listJSON));
-      // showError('Loaded lists from local storage.', true);
-    } else {
-      // showError('No lists found in local storage.');
-    }
-  }
-
-  useEffect(() => {
-    if (status === 404) getLocalLists();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [status]);
 
   function createList() {
     const listJSON = `{"list":"New List","id":"${uuidv4()}","shown":"true","editList":"true","createCategory":"true","categories":[]}`;
@@ -233,9 +209,6 @@ export function Lists({
   function saveLists() {
     if (!lists || lists.length === 0) return;
     // console.log('savelists lists: ', lists);
-    const listJSON = JSON.stringify(lists);
-    const username = localStorage.getItem('username') || '';
-    localStorage.setItem('shoppingLists:' + username, listJSON);
     pushLists();
     forceUpdate();
   }
